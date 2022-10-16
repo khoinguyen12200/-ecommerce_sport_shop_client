@@ -1,0 +1,35 @@
+@import '../../library';
+
+.BaseNavbar {
+    overflow: hidden;
+    position: sticky;
+    top:0;
+    display: flex;
+    background: $darkerMain;
+    border-bottom: 1px solid white;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.5);
+    z-index: 1000;
+
+    .itemLink {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+    }
+
+    .navigateSpace {
+        flex: 1;
+        display: flex;
+
+        .logoContainer {
+            .logo img {
+                padding: 20px;
+                height: 65px;
+            }
+        }
+    }
+    .userSpace{
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+    }
+}

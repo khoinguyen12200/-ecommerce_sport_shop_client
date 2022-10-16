@@ -1,0 +1,26 @@
+@import '../../library';
+
+.custom-shape-divider-bottom-1665904150 {
+    transform: translateY(-138px) rotate(180deg);
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+
+    &.brown {
+        .shape-fill {
+            fill: $main;
+        }
+    }
+}
+
+.custom-shape-divider-bottom-1665904150 svg {
+    position: relative;
+    display: block;
+    width: calc(147% + 1.3px);
+    height: 138px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1665904150 .shape-fill {
+    fill: #FFFFFF;
+}
