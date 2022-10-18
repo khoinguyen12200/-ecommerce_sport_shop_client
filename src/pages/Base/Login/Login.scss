@@ -1,0 +1,19 @@
+.LoginPage {
+    padding: 1em;
+
+    .loginForm {
+        margin: 0 auto;
+        max-width: 500px;
+        padding: 1em;
+        border-radius: 4px;
+
+        .logo{
+            width:100%;
+        }
+
+        .loginInput {
+            margin-bottom: 1em;
+
+        }
+    }
+}

@@ -1,0 +1,47 @@
+@import './library';
+
+.form-control {
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.3);
+        border: 1px solid teal;
+
+    }
+}
+
+.btn-primary {
+    background-color: teal;
+    border-color: teal;
+
+    &:hover {
+        background-color: teal;
+        border-color: teal;
+    }
+    &:focus {
+        background-color: teal;
+        border-color: teal;
+        box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.3);
+    }
+    &:active {
+        background-color: teal;
+        border-color: teal;
+    }
+}
+
+.btn-outline-primary {
+    color: teal;
+    border-color: teal;
+
+    &:hover {
+        color: #fff;
+        background-color: teal;
+        border-color: teal;
+    }
+    &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.3);
+    }
+    &:active {
+        color: #fff;
+        background-color: teal;
+        border-color: teal;
+    }
+}

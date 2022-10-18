@@ -2,6 +2,7 @@ import React from 'react'
 import './index.scss'
 import {Routes, Route, BrowserRouter} from 'react-router-dom'
 import Base from './Base/Base'
+import Login from './Base/Login/Login'
 
 type Props = {}
 

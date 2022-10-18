@@ -16,7 +16,7 @@ function BaseNavbar({ }: Props) {
         </Link>
       </div>
       <div className='userSpace'>
-        <Link to='login' className='itemLink fs-5'>
+        <Link to='dang-nhap' className='itemLink fs-5'>
           <FaUserCircle className='icon'/>
         </Link>
       </div>

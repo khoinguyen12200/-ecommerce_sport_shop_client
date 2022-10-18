@@ -4,66 +4,76 @@
 
     .firstSection {
         background: rgb(92, 15, 15);
-        // background: linear-gradient(90deg, rgba(92, 15, 15, 1) 0%, rgba(52, 11, 4, 1) 100%);
-        display: flex;
         height: 600px;
-        display: flex;
-        position: relative;
         overflow: hidden;
-
-        .bg {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            z-index: -1;
-            //blur
-            filter: blur(0px);
-            //flip horizontally
-            transform: scaleX(-1);
+        
+        .brandContainer {
+            margin-top: 1em;
+            margin-right: 1em;
         }
+       
 
-
-        .imageContainer {
-            flex: 3;
+        .sectionContent {
             height: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
+            position: relative;
+            overflow: hidden;
+            .bg {
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 120%;
+                z-index: -1;
+                //blur
+                filter: blur(0px);
+                //flip horizontally
+                transform: scaleX(-1);
+            }
 
-            .playerImage {
-                width: auto;
-                height: 450px;
+
+            .imageContainer {
+                flex: 3;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                align-items: center;
+
+                .playerImage {
+                    width: auto;
+                    height: 600px;
+                }
+            }
+
+            .textContainer {
+                padding-bottom: 50px;
+                margin-left: 50px;
+                margin-right: 20px;
+                flex: 5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .slogan {
+                    color: white;
+
+                    p {
+                        font-size: 20px;
+                        opacity: 0.8;
+                        text-transform: uppercase;
+                    }
+
+                    h1 {
+                        font-size: 80px;
+                        text-transform: uppercase;
+                        font-family: Cambria, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif;
+                    }
+
+                }
             }
         }
 
-        .textContainer {
-            padding-bottom: 50px;
-            margin-left: 50px;
-            margin-right: 20px;
-            flex: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
 
-            .slogan {
-                color: white;
-
-                p {
-                    font-size: 20px;
-                    opacity: 0.8;
-                    text-transform: uppercase;
-                }
-
-                h1 {
-                    font-size: 80px;
-                    text-transform: uppercase;
-                    font-family: Cambria, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif;
-                }
-
-            }
-        }
 
     }
 }
