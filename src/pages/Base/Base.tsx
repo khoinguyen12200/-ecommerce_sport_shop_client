@@ -12,7 +12,7 @@ function Base({}: Props) {
         <BaseNavbar/>
         <Routes>
             <Route path='/' element={<Home/>} />
-            <Route path='/dang-nhap' element={<Login/>} />
+            <Route path='/login' element={<Login/>} />
         </Routes>
     </div>
   )

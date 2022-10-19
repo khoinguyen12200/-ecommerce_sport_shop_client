@@ -2,10 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaBeer, FaUserCircle } from 'react-icons/fa';
 import './BaseNavbar.scss'
+import { useAppSelector } from '../../redux/store';
 
 type Props = {}
 
 function BaseNavbar({ }: Props) {
+  const account = useAppSelector(state => state.account);
+
   return (
     <div className='BaseNavbar'>
       <div className='navigateSpace'>
@@ -16,9 +19,18 @@ function BaseNavbar({ }: Props) {
         </Link>
       </div>
       <div className='userSpace'>
-        <Link to='dang-nhap' className='itemLink fs-5'>
-          <FaUserCircle className='icon'/>
-        </Link>
+        {
+            !account.role ?
+            <Link to='login' className='itemLink fs-5'>
+              <FaUserCircle className='icon' />
+            </Link> :
+            <Link to={account.role === 'ROLE_USER' ? 'user' : 'admin'} className='itemLink fs-5'>
+              <small style={{fontSize: 14}} className='mx-2'>
+                {account.email}
+              </small>
+              <FaUserCircle className='icon ml-1' />
+            </Link>
+        }
       </div>
     </div>
   )
