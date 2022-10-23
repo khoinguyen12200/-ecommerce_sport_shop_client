@@ -1,0 +1,14 @@
+@import '../../library';
+
+.AdminNavBar {
+    height: 60px;
+    background: $darkBlue;
+    width:100%;
+    .navContent {
+        .adminUser {
+            .dropdown-toggle::after {
+                display: none !important; 
+              }
+        }
+    }
+}

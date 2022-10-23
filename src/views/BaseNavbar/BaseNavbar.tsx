@@ -20,7 +20,7 @@ function BaseNavbar({ }: Props) {
       </div>
       <div className='userSpace'>
         {
-            !account.role ?
+            !account.accessToken ?
             <Link to='login' className='itemLink fs-5'>
               <FaUserCircle className='icon' />
             </Link> :

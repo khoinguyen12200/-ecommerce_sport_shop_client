@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="a3f57f98-f43d-49d3-b352-700f5a31b10d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/app/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/AppRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/AppRoutes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dashboard/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/shared/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/shared/Navbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/shared/Sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/shared/Sidebar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Admin/Admin.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/BaseNavbar/BaseNavbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/BaseNavbar/BaseNavbar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +33,14 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/khoinguyen/Desktop/Projects/sport_shop_client",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/khoinguyen/Desktop/Projects/sport_shop_client/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -45,8 +53,13 @@
       <option name="presentableId" value="Default" />
       <updated>1665291192076</updated>
       <workItem from="1665291195032" duration="22000" />
+      <workItem from="1666356655279" duration="147000" />
+      <workItem from="1666356818170" duration="533000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

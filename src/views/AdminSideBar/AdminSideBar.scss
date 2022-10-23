@@ -1,0 +1,52 @@
+@import '../../library';
+
+.AdminSideBar {
+    background:#e9ecef;
+    width: 250px;
+    height: 100vh;
+
+    .sideBarLogo {
+        height: 60px;
+        padding: 20px;
+        overflow: hidden;
+        display:flex;
+        align-items: center;
+        justify-content: flex-start;
+        // border-bottom: 1px solid $darkBlue;
+        background: $darkBlue;
+
+        .logoContainer {
+            overflow: hidden;
+            img {
+                height: 20px;
+            }
+        }
+    }
+
+    .sideBarItems {
+        padding: 15px;
+
+        .itemLink {
+            color: rgba(26,26,26,.75); 
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            text-decoration: none;
+            margin-bottom: 0.5em;
+
+            &:hover {
+                background: rgba(162, 166, 196, 0.353);
+                border-radius: 5px;
+            }
+
+            svg {
+                margin-right: 10px;
+                font-size: 20px;
+            }
+
+            .text {
+                font-size: 16px;
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 @import './library';
-
+@import "~bootstrap/scss/bootstrap";
 .form-control {
     &:focus {
         box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.3);
