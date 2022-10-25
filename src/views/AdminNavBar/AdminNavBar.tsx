@@ -2,11 +2,13 @@ import React from 'react'
 import './AdminNavBar.scss'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { RootState, useAppSelector } from '../../redux/store'
+import { useAppDispatch, useAppSelector } from '../../redux/store'
 import { GrUserAdmin } from 'react-icons/gr'
 import { MdAdminPanelSettings } from 'react-icons/md';
-import {RiHome2Line} from 'react-icons/ri'
-import { Dropdown } from 'react-bootstrap'
+import { RiHome2Line } from 'react-icons/ri'
+import { Button, Dropdown, Modal } from 'react-bootstrap'
+import { useState } from 'react';
+import { logout } from '../../redux/authSlice'
 
 
 type Props = {}
@@ -41,11 +43,49 @@ function AdminUser() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu align={'end'}>
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+               
                 <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                <Dropdown.Divider />
+                <LogoutModal/>
             </Dropdown.Menu>
         </Dropdown>
+    )
+}
+
+function LogoutModal() {
+    const dispatch = useAppDispatch();
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    function handleLogout() {
+        dispatch(logout());
+    }
+
+    return (
+        <>
+            <Dropdown.Item className='text-danger' onClick={handleShow}>Đăng xuất</Dropdown.Item>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Cảnh báo</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Bạn có chắc chắn muốn đăng xuất?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Thôi
+                    </Button>
+                    <Button variant="danger" onClick={handleLogout}>
+                        Đăng xuất
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
     )
 }
 

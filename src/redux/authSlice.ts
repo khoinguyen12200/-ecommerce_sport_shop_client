@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 interface AuthState {
   accessToken: string;
@@ -23,9 +24,19 @@ export const authSlice = createSlice({
       state.role = action.payload.role;
       state.email = action.payload.email;
       state.id = action.payload.id;
+      //save accessToken to localStorage
+      localStorage.setItem("accessToken", action.payload.accessToken);      
+    },
+    logout: (state) => {
+      state.accessToken = "";
+      state.role = "";
+      state.email = "";
+      state.id = "";
+      //remove accessToken from localStorage
+      localStorage.removeItem("accessToken");
     },
   },
 });
 
-export const { updateToken } = authSlice.actions;
+export const { updateToken, logout } = authSlice.actions;
 export default authSlice.reducer;

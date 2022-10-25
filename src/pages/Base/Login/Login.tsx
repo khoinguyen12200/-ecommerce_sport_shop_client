@@ -6,6 +6,8 @@ import useFetch from '../../../hooks/useFetch';
 import { ENDPOINT } from '../../../config/config';
 import { useAppDispatch } from '../../../redux/store';
 import { updateToken } from '../../../redux/authSlice';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 type Props = {}
 
@@ -29,16 +31,31 @@ function Login({ }: Props) {
         }
     }, [loading, res])
 
-    function submit(e: React.FormEvent<HTMLFormElement>) {
+    async function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        dispatchFetch({
-            endPoint: ENDPOINT + 'login_check',
-            method: 'POST',
-            body: {
-                username: email,
+        toast.promise(
+            sendForm(),
+            {
+                pending: 'Đang đăng nhập...',
+                success: 'Đăng nhập thành công',
+                error: 'Đăng nhập thất bại'
+            }
+        )
+    }
+
+    async function sendForm() {
+        const res = await axios.post(ENDPOINT + '/login_check', {
+            username: email,
                 password: password
-            },
         })
+        const data = res.data;
+        dispatch(updateToken({
+            accessToken: data.token,
+            role: data.role,
+            email: data.email,
+            id: data.id
+        }))
+
     }
 
     return (
