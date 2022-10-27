@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import authReducer from "./authSlice";
+import adminDataReducer from "./adminDataSlice";
 
 const loadState = () => {
   try {
@@ -26,6 +27,7 @@ const saveState = (state: any) => {
 export const store = configureStore({
   reducer: {
     account: authReducer,
+    admin: adminDataReducer,
   },
   preloadedState: loadState(),
   devTools: true,

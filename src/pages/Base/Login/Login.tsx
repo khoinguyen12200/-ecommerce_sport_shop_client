@@ -4,14 +4,17 @@ import './Login.scss'
 import ImageSporterus from '../../../assets/icons/sporterus-high-resolution-logo-transparent-background.png';
 import useFetch from '../../../hooks/useFetch';
 import { ENDPOINT } from '../../../config/config';
-import { useAppDispatch } from '../../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { updateToken } from '../../../redux/authSlice';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Navigate } from 'react-router-dom';
 
 type Props = {}
 
 function Login({ }: Props) {
+
+    const account = useAppSelector(state => state.account);
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -55,11 +58,17 @@ function Login({ }: Props) {
             email: data.email,
             id: data.id
         }))
-
     }
 
     return (
         <div className='LoginPage'>
+            {
+                account.accessToken && (
+                    account.role === 'ROLE_ADMIN' ? 
+                    <Navigate to='/admin' /> :
+                    <Navigate to='/user' />
+                )
+            }
             <div className='loginContainer mt-5'>
                 <div className='loginForm'>
                     <img src={ImageSporterus} className='logo mb-5 text-center' />

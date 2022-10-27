@@ -6,6 +6,7 @@ import AdminSideBar from '../../views/AdminSideBar/AdminSideBar'
 import './Admin.scss'
 import Product from './Product/Product'
 import { useEffect } from 'react';
+import Category from './Category/Category';
 type Props = {}
 
 function Admin({ }: Props) {
@@ -26,6 +27,7 @@ function Admin({ }: Props) {
         <div className='AdminContent'>
           <Routes>
             <Route path='product' element={<Product />} />
+            <Route path='category' element={<Category />} />
           </Routes>
         </div>
       </div>

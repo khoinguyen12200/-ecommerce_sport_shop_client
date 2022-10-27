@@ -27,7 +27,7 @@ function Product({ }: Props) {
 
     return (
         <BaseLayout title="Sản phẩm" rightSpace={<ModalAddProduct reload={fetch} />}>
-            <div style={{ height: 5000 }}>
+            <div>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -48,7 +48,7 @@ function Product({ }: Props) {
                                     <Image thumbnail style={{maxWidth:100, maxHeight:100}} src={getProductImagePath(product.image)}/>
                                 </td>
                                 <td className='text-center'>
-                                    <button className="btn btn-sm me-1 btn-primary">Sửa</button>
+                                    <ModalEditProduct reload={fetch} product={product}/>
                                     <ModalDeleteProduct reload={fetch} product={product} />
                                 </td>
                             </tr>
@@ -60,7 +60,7 @@ function Product({ }: Props) {
     )
 }
 
-function ModalAddProduct({ }: any) {
+function ModalAddProduct({ reload }: any) {
     const [show, setShow] = useState(false);
     
     //loading
@@ -86,6 +86,7 @@ function ModalAddProduct({ }: any) {
             }
         ).then(() => {
             form.reset();
+            reload();
         }).finally(() => {
             setLoading(false);
             handleClose();
@@ -100,9 +101,11 @@ function ModalAddProduct({ }: any) {
             }
         })
     }
+
+
     return (
         <>
-            <button className="btn btn-sm btn-success" onClick={handleShow}>Thêm</button>
+            <button className="btn btn-sm me-1 btn-info" onClick={handleShow}>Thêm</button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Thêm sản phẩm</Modal.Title>
@@ -155,11 +158,99 @@ function ModalAddProduct({ }: any) {
     );
 }
 
-function ModalEditProduct({ }: Props) {
-    return (
-        <div>
+function ModalEditProduct({ reload, product }: any) {
 
-        </div>
+    const [show, setShow] = useState(false);
+    
+    //loading
+    const [loading, setLoading] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setLoading(true);
+    
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(e.currentTarget);
+        
+        //toastify loading
+        await toast.promise(
+            sendForm(formData),
+            {
+                pending: 'Đang sửa sản phẩm',
+                success: 'Sửa sản phẩm thành công',
+                error: 'Sửa sản phẩm thất bại'
+            }
+        ).then(() => {
+            form.reset();
+            reload();
+        }).finally(() => {
+            setLoading(false);
+            handleClose();
+        })
+        
+    }
+
+    async function sendForm(formData: FormData) {
+        let res = await axios.post(ENDPOINT + '/admin/product/edit/'+product.id, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+    }
+
+    return (
+        <>
+        <button className="btn btn-sm btn-success me-1" onClick={handleShow}>Sửa</button>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Sửa sản phẩm</Modal.Title>
+            </Modal.Header>
+            <form onSubmit={handleSubmitForm}>
+                <Modal.Body>
+                    <div className="mb-3">
+                        <label htmlFor="name" className="form-label">Tên sản phẩm</label>
+                        <input type="text" className="form-control" id="name" name="name" required defaultValue={product.name}/>
+                    </div>
+                    {/* description */}
+                    <div className="mb-3">
+                        <label htmlFor="description" className="form-label">Mô tả</label>
+                        <textarea className="form-control" id="description" name="description" rows={3}
+                        defaultValue={product.description}
+                        ></textarea>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="price" className="form-label">Giá</label>
+                        <input type="number" className="form-control" id="price" name="price" required defaultValue={product.price}/>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="image" className="form-label">Ảnh</label>
+                        <input type="file" className="form-control" id="image" name="image" />
+                    </div>
+                    {/* quantity */}
+                    <div className="mb-3">
+                        <label htmlFor="quantity" className="form-label">Số lượng</label>
+                        <input type="number" className="form-control" id="quantity" defaultValue={product.quantity}/>
+                    </div>
+                    {/* unit */}
+                    <div className="mb-3">
+                        <label htmlFor="unit" className="form-label">Đơn vị</label>
+                        <input type="text" className="form-control" id="unit" defaultValue={product.unit}/>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" type='button' onClick={handleClose}>
+                        Huỷ
+                    </Button>
+                    <Button disabled={loading} type="submit" variant="primary">
+                        Lưu
+                        {loading && <Spinner className='ms-2' animation="grow" size='sm' />}
+                    </Button>
+                </Modal.Footer>
+            </form>
+        </Modal>
+    </>
     )
 }
 

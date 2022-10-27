@@ -4,6 +4,7 @@ import './AdminSideBar.scss'
 import Image from 'react-bootstrap/Image'
 import {AiFillDashboard} from 'react-icons/ai';
 import {GiConverseShoe} from 'react-icons/gi';
+import { MdCategory } from 'react-icons/md';
 type Props = {}
 
 function AdminSideBar({ }: Props) {
@@ -20,7 +21,7 @@ function AdminSideBar({ }: Props) {
                 <div className="sideBarItems">
                     <ItemLink to='/admin' Icon={<AiFillDashboard/>} text='Tổng quan' />
                     <ItemLink to='/admin/product' Icon={<GiConverseShoe/>} text='Sản phẩm' />
-                    <ItemLink to='/admin' Icon={<AiFillDashboard/>} text='Tổng quan' />
+                    <ItemLink to='/admin/category' Icon={<MdCategory/>} text='Phân loại' />
                     <ItemLink to='/admin' Icon={<AiFillDashboard/>} text='Tổng quan' />
                     <ItemLink to='/admin' Icon={<AiFillDashboard/>} text='Tổng quan' />
                     <ItemLink to='/admin' Icon={<AiFillDashboard/>} text='Tổng quan' />
