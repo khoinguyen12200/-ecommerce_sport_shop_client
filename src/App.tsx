@@ -9,7 +9,6 @@ import { useAppSelector } from './redux/store';
 function App() {
   const account = useAppSelector(state => state.account);
   useEffect(() => {
-    console.log(account);
     axios.defaults.headers.common["Authorization"] = `Bearer ${account.accessToken}`;
   }, [account]);
 

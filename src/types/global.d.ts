@@ -10,11 +10,18 @@ declare global {
         name: string;
         slug: string;
         uniqueId: string;
+        
+
     }
 
     interface ProductInterface {
         id: string;
         name: string;
         slug: string;       
+        price: number;
+        description: string;
+        image: string;
+        quantity: number;
+        categories: CategoryInterface[];
     }
 }
