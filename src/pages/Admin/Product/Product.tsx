@@ -7,13 +7,14 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify'
-import { getProductImagePath } from '../../../helper/PathHelper'
+import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper'
 
 type Props = {}
 
 function Product({ }: Props) {
 
     const [products, setProducts] = useState([]);
+
     const categories = useAppSelector(state => state.admin.categories)
 
     async function fetch() {
@@ -36,11 +37,14 @@ function Product({ }: Props) {
                             <th>Tên sản phẩm</th>
                             <th>Giá</th>
                             <th>Ảnh</th>
+                            <th>
+                                Ảnh mô tả
+                            </th>
                             <th className='text-center'>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((product: any, index: number) => (
+                        {products.map((product: ProductInterface, index: number) => (
                             <tr key={index}>
                                 <td>{product.id}</td>
                                 <td>{product.name}</td>
@@ -48,9 +52,20 @@ function Product({ }: Props) {
                                 <td>
                                     <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductImagePath(product.image)} />
                                 </td>
+                                <td>
+                                    <div className='d-flex flex-wrap gap-2 align-items-center'>
+                                    {
+                                        product.productGalleries.map((gallery: ProductGalleryInterface, index: number) => (
+                                            <ProductGalleryItem key={index} gallery={gallery} product={product} reload={fetch}/>
+                                        ))
+                                    }
+                                    <ModalAddProductGallery product={product} reload={fetch} />
+                                    </div>
+                                </td>
                                 <td className='text-center'>
                                     <ModalEditProduct reload={fetch} product={product} />
                                     <ModalDeleteProduct reload={fetch} product={product} />
+                                    
                                 </td>
                             </tr>
                         ))}
@@ -58,6 +73,107 @@ function Product({ }: Props) {
                 </Table>
             </div>
         </BaseLayout>
+    )
+}
+
+function ProductGalleryItem({ gallery, product, reload }: { gallery: ProductGalleryInterface, product: ProductInterface, reload: any }) {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    async function sendDelete(){
+        toast.promise(
+            deleteGallery(),
+            {
+                pending: 'Đang xóa',
+                success: 'Xóa thành công',
+                error: 'Xóa thất bại'
+            }
+        )
+    }
+
+    async function deleteGallery() {
+        await (await axios.delete(ENDPOINT + '/admin/product/' + product.id + '/gallery/' + gallery.id))
+        handleClose();
+        reload();
+    }
+
+    return (
+        <div className='position-relative'>
+            <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductGalleryPath(gallery.path)} />
+            <div className='position-absolute bottom-0 end-0'>
+            <button onClick={handleShow} className='btn btn-danger btn-sm'>x</button>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Xóa ảnh</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Bạn có chắc chắn muốn xóa ảnh này?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Huỷ
+                        </Button>
+                        <Button variant="primary" onClick={sendDelete}>
+                            Xoá
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+            </div>
+        </div>
+    )
+}
+
+function ModalAddProductGallery({product, reload}: {product: ProductInterface, reload: any}) {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [file, setFile] = useState<File | null | undefined>(null);
+    const [loading, setLoading] = useState(false);
+
+    async function sendAdd(){
+        toast.promise(
+            addGallery(),
+            {
+                pending: 'Đang thêm',
+                success: 'Thêm thành công',
+                error: 'Thêm thất bại'
+            }
+        )
+    }
+
+    async function addGallery() {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('file', file as File);
+        await (await axios.post(ENDPOINT + '/admin/product/' + product.id + '/gallery', formData))
+        
+        reload();
+        setLoading(false);
+        setShow(false);
+    }
+
+    return (
+        <>
+            <button onClick={handleShow} className='btn btn-primary btn-sm ms-1'>+</button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Thêm ảnh</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <input type='file' onChange={(e) => setFile(e.target.files?.item(0))}
+                        className='form-control' />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Huỷ
+                    </Button>
+                    <Button variant="primary" onClick={sendAdd}>
+                        Thêm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
     )
 }
 

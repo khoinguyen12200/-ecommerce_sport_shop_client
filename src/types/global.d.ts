@@ -14,6 +14,11 @@ declare global {
 
     }
 
+    interface ProductGalleryInterface {
+        id: string;
+        path: string;
+    }
+
     interface ProductInterface {
         id: string;
         name: string;
@@ -23,5 +28,6 @@ declare global {
         image: string;
         quantity: number;
         categories: CategoryInterface[];
+        productGalleries: ProductGalleryInterface[];
     }
 }
