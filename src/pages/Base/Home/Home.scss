@@ -2,14 +2,23 @@
 
 .HomePage {
 
+    section {
+        margin-bottom: 8em;
+    }
+
     .firstSection {
-        background: rgb(92, 15, 15);
+        // background: rgb(92, 15, 15);
         height: 600px;
         overflow: hidden;
+        position: relative;
         
         .brandContainer {
-            margin-top: 1em;
-            margin-right: 1em;
+            position:absolute;
+            top:0;
+            right:0;
+            z-index: 100;
+            margin-top: 0.5em;
+            margin-right: 0.5em;
         }
        
 
@@ -21,38 +30,21 @@
             .bg {
                 position: absolute;
                 top: 0;
-                right: 0;
-                height: 120%;
+                left: 0;
+                width: 100%;
                 z-index: -1;
-                //blur
-                filter: blur(0px);
-                //flip horizontally
-                transform: scaleX(-1);
-            }
-
-
-            .imageContainer {
-                flex: 3;
                 height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-end;
-                align-items: center;
-
-                .playerImage {
-                    width: auto;
-                    height: 600px;
-                }
+                object-fit: cover;
             }
+
 
             .textContainer {
-                padding-bottom: 50px;
-                margin-left: 50px;
-                margin-right: 20px;
                 flex: 5;
                 display: flex;
-                align-items: center;
+                align-items: flex-end;
                 justify-content: center;
+                padding:2em;
+                background: rgba(0,0,0,0.5);
 
                 .slogan {
                     color: white;
@@ -75,5 +67,43 @@
 
 
 
+    }
+
+    .listCategories{
+        display:flex;
+        flex-direction:row;
+        justify-content:space-around;
+        align-items:flex-start;
+        .categoryItem {
+            width: 300px;
+            @keyframes slideInFromLeft {
+                0% {
+                    transform: translateX(-100%);
+                }
+                100% {
+                    transform: translateX(0);
+                }
+            }
+            .image {
+                width: 300px;
+                overflow: hidden;
+                object-fit: contain;
+                margin-bottom: 1em;
+            }
+        }
+    }
+
+    .slogan1{
+        font-size: 3.5em;
+        padding:1em 0.5em;
+        .txt1 {
+
+        }
+        .txt2{
+            font-size: 0.8em;
+            .txt3 {
+                font-size:2em;
+            }
+        }
     }
 }

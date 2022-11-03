@@ -1,7 +1,7 @@
 @import '../../library';
 
 .custom-shape-divider-bottom-1665904150 {
-    transform: translateY(-138px) rotate(180deg);
+    transform: rotate(180deg);
     width: 100%;
     overflow: hidden;
     line-height: 0;
@@ -9,6 +9,11 @@
     &.brown {
         .shape-fill {
             fill: $main;
+        }
+    }
+    &.black {
+        .shape-fill {
+            fill: black;
         }
     }
 }

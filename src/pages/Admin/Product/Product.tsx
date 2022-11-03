@@ -8,23 +8,27 @@ import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify'
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper'
+import { setProducts } from '../../../redux/adminDataSlice'
 
 type Props = {}
 
 function Product({ }: Props) {
 
-    const [products, setProducts] = useState([]);
 
+    const products = useAppSelector(state => state.admin.products);
+    const dispatch = useAppDispatch();
     const categories = useAppSelector(state => state.admin.categories)
 
     async function fetch() {
         const res = await axios.get(ENDPOINT + '/admin/product');
         const data = res?.data?.products;
-        setProducts(data);
+        dispatch(setProducts(data));
     }
 
     useEffect(() => {
-        fetch()
+        if(!products) {
+            fetch()
+        }
     }, [])
 
     return (
@@ -44,7 +48,7 @@ function Product({ }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((product: ProductInterface, index: number) => (
+                        {products && products.map((product: ProductInterface, index: number) => (
                             <tr key={index}>
                                 <td>{product.id}</td>
                                 <td>{product.name}</td>
@@ -150,7 +154,11 @@ function ModalAddProductGallery({product, reload}: {product: ProductInterface, r
         
         reload();
         setLoading(false);
-        setShow(false);
+    }
+
+    async function onChangeFile(e: any) {
+        setFile(e.target.files[0]);
+        sendAdd();
     }
 
     return (
@@ -161,7 +169,7 @@ function ModalAddProductGallery({product, reload}: {product: ProductInterface, r
                     <Modal.Title>Thêm ảnh</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <input type='file' onChange={(e) => setFile(e.target.files?.item(0))}
+                    <input type='file' onChange={onChangeFile}
                         className='form-control' />
                 </Modal.Body>
                 <Modal.Footer>
