@@ -1,0 +1,86 @@
+.ProductShow {
+    margin: 2em;
+    .headSpace {
+        display: flex;
+        .imageSpaces {
+            display:flex;
+            height:400px;
+            .listDescImage {
+                display: flex;
+                flex-direction: column;
+                overflow-y: scroll;
+                border-right: 1px solid grey;
+                .img {
+                    width: 100px;
+                    height: 100px;
+                    object-fit: cover;
+                }
+            }
+            .mainImage {
+                width:400px;
+                height:400px;
+            }
+        }
+        .info {
+            flex:1;
+            padding-left: 4em;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .name {
+                font-size: 30px;
+                text-transform: uppercase;
+                margin-bottom: 0.25em;
+            }
+            
+            .price {
+                font-size: 20px;
+                text-transform: uppercase;
+                margin-bottom: 0.2em;
+            }
+
+            .slogans {
+                border: 1px solid grey;
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-around;
+                .slogan {
+                    flex:1;
+                    padding: 1em;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-between;
+                    .icon {
+                        font-size:3em;
+                        margin-bottom: 10px;
+                    }
+                    .text {
+                        text-align: center;
+                        font-size: 0.8em;
+                        .desc {
+                            font-size: 0.8em;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    .description {
+        margin-top: 2em;
+        display: flex;
+        flex-direction: column;
+        .title {
+            font-size: 20px;
+            text-transform: uppercase;
+            margin-bottom: 0.25em;
+        }
+        .content {
+            font-size: 15px;
+            margin-bottom: 0.2em;
+            line-height: 2em;
+        }
+    }
+}

@@ -1,16 +1,29 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { FaBeer, FaUserCircle } from 'react-icons/fa';
 import './BaseNavbar.scss'
 import { useAppSelector } from '../../redux/store';
+import { AiOutlineShoppingCart } from 'react-icons/ai';
 
 type Props = {}
 
 function BaseNavbar({ }: Props) {
+  const [loading, setLoading] = React.useState(false);
+  const location = useLocation();
+
+  React.useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, [location]);
+
+
+
   const account = useAppSelector(state => state.account);
 
   return (
-    <div className='BaseNavbar'>
+    <div className={`BaseNavbar ${loading && 'loading'}`}>
       <div className='navigateSpace'>
         <Link to='/' className='logoContainer'>
           <div className='logo'>
@@ -27,6 +40,9 @@ function BaseNavbar({ }: Props) {
         </div>
       </div>
       <div className='userSpace'>
+        <Link to='/cart' className='itemLink fs-5'>
+          <AiOutlineShoppingCart/>
+        </Link>
         {
           !account.accessToken ?
             <Link to='login' className='itemLink fs-5'>

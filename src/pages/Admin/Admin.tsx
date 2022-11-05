@@ -4,7 +4,7 @@ import { useAppSelector } from '../../redux/store'
 import AdminNavBar from '../../views/AdminNavBar/AdminNavBar'
 import AdminSideBar from '../../views/AdminSideBar/AdminSideBar'
 import './Admin.scss'
-import Product from './Product/Product'
+import Product from './Products/Products'
 import { useEffect } from 'react';
 import Category from './Category/Category';
 type Props = {}

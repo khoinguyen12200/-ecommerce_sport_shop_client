@@ -1,0 +1,33 @@
+.ProductsPage {
+    .productsList {
+        margin-top: 2em;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        margin: 2em;
+        gap: 2em;
+        .ProductItem {
+            width:300px;
+            position: relative;
+            text-decoration: none;
+            color:black;
+            .img {
+                width: 300px;
+                height: 300px;
+                object-fit: cover;
+                margin-bottom: 1em;
+            }
+            .info {
+                .name {
+                    text-transform: uppercase;
+                    margin-bottom: 0.25em;
+                }
+                .price {
+                    text-transform: uppercase;
+                    margin-bottom: 0.2em;
+                }
+            }
+        }
+    }
+    
+}

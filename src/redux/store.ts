@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import authReducer from "./authSlice";
 import adminDataReducer from "./adminDataSlice";
+import cartReducer from "./cartSlice";
 
 const loadState = () => {
   try {
@@ -28,6 +29,7 @@ export const store = configureStore({
   reducer: {
     account: authReducer,
     admin: adminDataReducer,
+    cart: cartReducer,
   },
   preloadedState: loadState(),
   devTools: true,

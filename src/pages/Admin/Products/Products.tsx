@@ -150,7 +150,7 @@ function ModalAddProductGallery({product, reload}: {product: ProductInterface, r
         setLoading(true);
         const formData = new FormData();
         formData.append('file', file as File);
-        await (await axios.post(ENDPOINT + '/admin/product/' + product.id + '/gallery', formData))
+        await axios.post(ENDPOINT + '/admin/product/' + product.id + '/gallery', formData)
         
         reload();
         setLoading(false);
@@ -273,6 +273,11 @@ function ModalAddProduct({ reload }: any) {
                             <label htmlFor="image" className="form-label">Ảnh</label>
                             <input type="file" className="form-control" id="image" name="image" />
                         </div>
+                        {/* array size */}
+                        <div className="mb-3">
+                            <label htmlFor="sizes" className="form-label">Size</label>
+                            <input type="text" className="form-control" id="sizes" name="sizes" />
+                        </div>
                         {/* quantity */}
                         <div className="mb-3">
                             <label htmlFor="quantity" className="form-label">Số lượng</label>
@@ -283,8 +288,6 @@ function ModalAddProduct({ reload }: any) {
                             <label htmlFor="unit" className="form-label">Đơn vị</label>
                             <input type="text" className="form-control" id="unit" />
                         </div>
-
-
 
                     </Modal.Body>
                     <Modal.Footer>
@@ -392,6 +395,11 @@ function ModalEditProduct({ reload, product }: any) {
                         <div className="mb-3">
                             <label htmlFor="image" className="form-label">Ảnh</label>
                             <input type="file" className="form-control" id="image" name="image" />
+                        </div>
+                         {/* array size */}
+                         <div className="mb-3">
+                            <label htmlFor="sizes" className="form-label">Size</label>
+                            <input type="text" className="form-control" id="sizes" name="sizes" defaultValue={product.sizes} />
                         </div>
                         {/* quantity */}
                         <div className="mb-3">
