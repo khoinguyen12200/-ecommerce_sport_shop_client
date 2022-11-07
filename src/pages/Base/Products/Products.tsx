@@ -17,7 +17,7 @@ function Product({ }: Props) {
         const params = new URLSearchParams(window.location.search);
         const paramsString = params.toString();
         const path = ENDPOINT+'/products?'+paramsString;
-        console.log(path);
+
         const res = await axios.get(path);
         setProducts(res.data);
     }
@@ -31,12 +31,12 @@ function Product({ }: Props) {
             <div>
 
             </div>
+
             <div className='productsList'>
                 {
                     products.map((product: ProductInterface) => (
                         <ProductItem product={product} />
                     ))
-
                 }
             </div>
         </div>

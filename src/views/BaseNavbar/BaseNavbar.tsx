@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaBeer, FaUserCircle } from 'react-icons/fa';
 import './BaseNavbar.scss'
@@ -17,6 +17,12 @@ function BaseNavbar({ }: Props) {
       setLoading(false);
     }, 1000);
   }, [location]);
+
+  const products = useAppSelector(state => state.cart.products) || [];
+
+  const count = useMemo(() => {
+    return products.reduce((a, b) => a + b.quantity, 0);
+  }, [products])
 
 
 
@@ -40,8 +46,11 @@ function BaseNavbar({ }: Props) {
         </div>
       </div>
       <div className='userSpace'>
-        <Link to='/cart' className='itemLink fs-5'>
-          <AiOutlineShoppingCart/>
+        <Link to='/cart' className='itemLink fs-5 position-relative'>
+          <AiOutlineShoppingCart />
+          <span style={{fontSize:8, top: 15}} className='position-absolute px-2 start-100 translate-middle badge rounded-pill bg-secondary'>
+            {count}
+          </span>
         </Link>
         {
           !account.accessToken ?

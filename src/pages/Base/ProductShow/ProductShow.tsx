@@ -33,22 +33,22 @@ function ProductShow({ }: Props) {
     }
 
     function addToCart() {
-        const elementSizes =  document.querySelector('input[name="size"]');
-        let size = '';
-        if(elementSizes) {
-            const sizeElement = document.querySelector('input[name="size"]:checked') as HTMLInputElement;
-            if (!sizeElement) {
-                toast.error('Vui lòng chọn size');
-                return;
-            }
-            size = sizeElement.value;
-        }
-        const cartItem: ProductCartInterface = {
+        let cartItem: ProductCartInterface = {
             productId: product?.id || '',
             quantity: quantity,
-            size: size
         }
 
+        const variants =  document.querySelector('input[name="variant"]');
+        if(variants) {
+            const variantEl = document.querySelector('input[name="variant"]:checked') as HTMLInputElement;
+            if (!variantEl) {
+                toast.error('Vui lòng chọn loại sản phẩm');
+                return;
+            }
+            cartItem.productId =  variantEl.value;
+        }
+       
+        
         dispatch(addProductToCart(cartItem));
         toast.success('Đã thêm vào giỏ hàng');
     }
@@ -110,10 +110,10 @@ function ProductShow({ }: Props) {
                     <div>
                         <div className="sizes d-flex justify-content-end flex-wrap gap-1 mb-3">
                             {
-                                product.sizes && product.sizes.split(' ').map((size, index) => (
+                                product.variants && product.variants.map((variants, index) => (
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="radio" name="size" id={size} value={size} />
-                                        <label className="form-check-label" htmlFor={size}>{size}</label>
+                                        <input className="form-check-input" type="radio" name="variant" id={variants.id+'variant'} value={variants.id} />
+                                        <label className="form-check-label" htmlFor={variants.id+'variant'}>{variants.variantName}</label>
                                     </div>
                                 ))
                             }

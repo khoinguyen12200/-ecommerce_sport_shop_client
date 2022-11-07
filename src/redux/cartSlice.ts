@@ -19,7 +19,7 @@ export const authSlice = createSlice({
             if(!state.products) {
                 state.products = [];
             }
-            const index = state.products.findIndex((product) => product.productId === action.payload.productId && product.size === action.payload.size);
+            const index = state.products.findIndex((product) => product.productId === action.payload.productId );
             if (index !== -1) {
                 state.products[index].quantity += action.payload.quantity;
             }
@@ -31,23 +31,23 @@ export const authSlice = createSlice({
             if(!state.products) {
                 state.products = [];
             }
-            const index = state.products.findIndex((product) => product.productId === action.payload.productId && product.size === action.payload.size);
+            const index = state.products.findIndex((product) => product.productId === action.payload.productId);
             if (index !== -1) {
                 state.products.splice(index, 1);
             }
         },
-        updateProductQuantity: (state, action: PayloadAction<ProductCartInterface>) => {
+        updateProduct: (state, action: PayloadAction<ProductCartInterface>) => {
             if(!state.products) {
                 state.products = [];
             }
-            const index = state.products.findIndex((product) => product.productId === action.payload.productId && product.size === action.payload.size);
+            const index = state.products.findIndex((product) => product.productId === action.payload.productId);
             if (index !== -1) {
-                state.products[index].quantity = action.payload.quantity;
+                state.products[index] = action.payload;
             }
         }
 
     },
 });
 
-export const { addProductToCart, removeProductFromCart, updateProductQuantity } = authSlice.actions;
+export const { addProductToCart, removeProductFromCart, updateProduct } = authSlice.actions;
 export default authSlice.reducer;

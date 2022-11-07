@@ -5,6 +5,7 @@ import BaseNavbar from '../../views/BaseNavbar/BaseNavbar';
 import Login from './Login/Login';
 import Product from './Products/Products';
 import ProductShow from './ProductShow/ProductShow';
+import Cart from './Cart/Cart';
 
 
 type Props = {}
@@ -18,6 +19,7 @@ function Base({}: Props) {
             <Route path='/login' element={<Login/>} />
             <Route path='/products' element={<Product/>} />
             <Route path='/product/:id' element={<ProductShow/>} />
+            <Route path='/cart' element={<Cart/>} />
         </Routes>
     </div>
   )

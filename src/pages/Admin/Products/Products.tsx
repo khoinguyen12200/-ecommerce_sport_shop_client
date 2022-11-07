@@ -9,6 +9,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify'
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper'
 import { setProducts } from '../../../redux/adminDataSlice'
+import { Link } from 'react-router-dom'
 
 type Props = {}
 
@@ -26,13 +27,13 @@ function Product({ }: Props) {
     }
 
     useEffect(() => {
-        if(!products) {
-            fetch()
-        }
+        fetch()
     }, [])
 
     return (
-        <BaseLayout title="Sản phẩm" rightSpace={<ModalAddProduct reload={fetch} />}>
+        <BaseLayout title="Sản phẩm" rightSpace={
+            <Link to='/admin/product/add' className="btn me-1 btn-dark">Thêm</Link>
+        }>
             <div>
                 <Table striped bordered hover>
                     <thead>
@@ -41,9 +42,6 @@ function Product({ }: Props) {
                             <th>Tên sản phẩm</th>
                             <th>Giá</th>
                             <th>Ảnh</th>
-                            <th>
-                                Ảnh mô tả
-                            </th>
                             <th className='text-center'>Thao tác</th>
                         </tr>
                     </thead>
@@ -51,23 +49,29 @@ function Product({ }: Props) {
                         {products && products.map((product: ProductInterface, index: number) => (
                             <tr key={index}>
                                 <td>{product.id}</td>
-                                <td>{product.name}</td>
+                                <td>
+                                    <div>
+                                    {product.name}
+                                    </div>
+                                    {
+                                        product.variants && (
+                                            <div className="d-flex flex-wrap gap-2 mt-2">
+                                                {product.variants.map((variant: ProductInterface, index: number) => (
+                                                    <Link to={`/admin/product/edit/${variant.id}`} className="btn btn-sm btn-outline-dark">
+                                                        {variant.variantName}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )
+                                    }
+                                </td>
                                 <td>{product.price}</td>
                                 <td>
                                     <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductImagePath(product.image)} />
                                 </td>
-                                <td>
-                                    <div className='d-flex flex-wrap gap-2 align-items-center'>
-                                    {
-                                        product.productGalleries.map((gallery: ProductGalleryInterface, index: number) => (
-                                            <ProductGalleryItem key={index} gallery={gallery} product={product} reload={fetch}/>
-                                        ))
-                                    }
-                                    <ModalAddProductGallery product={product} reload={fetch} />
-                                    </div>
-                                </td>
+                            
                                 <td className='text-center'>
-                                    <ModalEditProduct reload={fetch} product={product} />
+                                    <Link to={`/admin/product/edit/${product.id}`} className="btn btn-sm btn-primary me-1">Sửa</Link>
                                     <ModalDeleteProduct reload={fetch} product={product} />
                                     
                                 </td>
@@ -257,7 +261,7 @@ function ModalAddProduct({ reload }: any) {
                             <div className="form-check d-flex flex-wrap gap-2">
                                 {categories && categories.map((category: any, index: number) => (
                                     <div className='px-3'>
-                                        <input className="form-check-input" type="checkbox" name="categories[]" id={category.id} value={category.id} />
+                                        <input className="form-check-input" type="checkbox" name="categories[]" id={category.id} value={category.id} required/>
                                         <label className="form-check-label" htmlFor={category.id}>
                                             {category.name}
                                         </label>

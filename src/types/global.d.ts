@@ -29,13 +29,17 @@ declare global {
         quantity: number;
         categories: CategoryInterface[];
         productGalleries: ProductGalleryInterface[];
-        sizes: string;
+        unit: string;
+        variants: ProductInterface[];
+        parent?: number;
+        variantName: string;
     }
 
     interface ProductCartInterface {
         productId: string;
         quantity: number;
-        size: string;
+        productDetail?: ProductInterface;
+        checked?: boolean;
     }
 }
 

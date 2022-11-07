@@ -7,6 +7,8 @@ import './Admin.scss'
 import Product from './Products/Products'
 import { useEffect } from 'react';
 import Category from './Category/Category';
+import AddProduct from './Products/AddProduct'
+import EditProduct from './Products/EditProduct'
 type Props = {}
 
 function Admin({ }: Props) {
@@ -27,6 +29,8 @@ function Admin({ }: Props) {
         <div className='AdminContent'>
           <Routes>
             <Route path='product' element={<Product />} />
+            <Route path='product/add' element={<AddProduct />} />
+            <Route path='product/edit/:id' element={<EditProduct />} />
             <Route path='category' element={<Category />} />
           </Routes>
         </div>
