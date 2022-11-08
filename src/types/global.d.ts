@@ -36,9 +36,10 @@ declare global {
     }
 
     interface ProductCartInterface {
+        id?: string;
         productId: string;
         quantity: number;
-        productDetail?: ProductInterface;
+        product?: ProductInterface;
         checked?: boolean;
     }
 }

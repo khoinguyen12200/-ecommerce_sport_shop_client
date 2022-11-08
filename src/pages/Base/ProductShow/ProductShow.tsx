@@ -8,8 +8,8 @@ import { ENDPOINT } from '../../../config/config';
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper';
 import './ProductShow.scss';
 import { useAppDispatch } from '../../../redux/store';
-import { addProductToCart } from '../../../redux/cartSlice';
 import { toast } from 'react-toastify';
+import { updateCart } from '../../../redux/cartSlice';
 
 
 type Props = {}
@@ -47,10 +47,8 @@ function ProductShow({ }: Props) {
             }
             cartItem.productId =  variantEl.value;
         }
-       
         
-        dispatch(addProductToCart(cartItem));
-        toast.success('Đã thêm vào giỏ hàng');
+        dispatch(updateCart(cartItem));
     }
 
     if (!product) {

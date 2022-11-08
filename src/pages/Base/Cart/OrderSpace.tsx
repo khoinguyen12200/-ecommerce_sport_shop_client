@@ -20,7 +20,7 @@ function OrderSpace({ }: Props) {
     }, [products])
 
     const totalPrice = useMemo(() => {
-        return listCheckedProducts.reduce((a, b) => a + b.quantity * (b?.productDetail?.price || 0), 0);
+        return listCheckedProducts.reduce((a, b) => a + b.quantity * (b?.product?.price || 0), 0);
     }, [listCheckedProducts])
 
     return (
@@ -65,7 +65,7 @@ function OrderSpace({ }: Props) {
 }
 
 function OrderItem({ product }: { product: ProductCartInterface }) {
-    const productDetail = product.productDetail;
+    const productDetail = product.product;
     const total = useMemo(() => {
         return (productDetail?.price || 0) * product.quantity;
     }, [productDetail, product.quantity])

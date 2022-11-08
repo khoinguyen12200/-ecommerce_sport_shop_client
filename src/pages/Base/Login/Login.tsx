@@ -79,7 +79,7 @@ function Login({ }: Props) {
                             Đăng nhập
                         </button>
                         <div className='mt-5 text-center'>
-                            <a className='btn btn-dark btn-sm mx-2 rounded-lg'>
+                            <a href='/register' className='btn btn-dark btn-sm mx-2 rounded-lg'>
                                 Đăng ký
                             </a>
                             <a className='btn btn-secondary btn-sm rounded-lg mx-2'>

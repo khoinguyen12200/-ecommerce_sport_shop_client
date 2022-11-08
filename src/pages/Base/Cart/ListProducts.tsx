@@ -4,7 +4,7 @@ import './Cart.scss'
 import { useEffect } from 'react';
 import axios from 'axios';
 import { ENDPOINT } from '../../../config/config';
-import { removeProductFromCart, updateProduct } from '../../../redux/cartSlice';
+import { deleteCart,  toggleCheckedCart,  updateCart } from '../../../redux/cartSlice';
 import { getProductImagePath } from '../../../helper/PathHelper';
 import { BsArrowRightCircle, BsArrowRightCircleFill, BsCartDash, BsCheckCircle, BsCircle, BsFillCartPlusFill } from 'react-icons/bs';
 
@@ -39,41 +39,29 @@ export default function ListProducts() {
 }
 
 function ProductItem({ product }: { product: ProductCartInterface }) {
-    const productDetail = product.productDetail;
+    const productDetail = product.product;
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        getProductDetail();
-    }, [product.productId])
-
-    async function getProductDetail() {
-        const res = await axios.get(ENDPOINT + `/product/${product.productId}`);
-        const newProduct = { ...product, productDetail: res.data };
-        console.log(newProduct);
-        dispatch(updateProduct(newProduct))
-    }
 
     function addOne() {
         const newProduct = { ...product, quantity: product.quantity + 1 };
-        dispatch(updateProduct(newProduct))
+        dispatch(updateCart(newProduct))
     }
 
     function minusOne() {
         if (product.quantity <= 1) {
             const agree = window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?');
             if (agree) {
-                dispatch(removeProductFromCart(product));
+                dispatch(deleteCart(product));
             }
 
             return;
         }
         const newProduct = { ...product, quantity: product.quantity - 1 };
-        dispatch(updateProduct(newProduct))
+        dispatch(updateCart(newProduct))
     }
 
     function toggleChecked() {
-        const newProduct = { ...product, checked: !product.checked };
-        dispatch(updateProduct(newProduct))
+        dispatch(toggleCheckedCart(product))
     }
 
     if (!productDetail) {
