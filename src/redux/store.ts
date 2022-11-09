@@ -6,7 +6,7 @@ import cartReducer from "./cartSlice";
 
 const loadState = () => {
   try {
-    const serializedState = localStorage.getItem("state");
+    const serializedState = localStorage.getItem("LocalState");
     if (serializedState === null) {
       return undefined;
     }
@@ -19,7 +19,7 @@ const loadState = () => {
 const saveState = (state: any) => {
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem("state", serializedState);
+    localStorage.setItem("LocalState", serializedState);
   } catch (e) {
     // Ignore write errors;
   }

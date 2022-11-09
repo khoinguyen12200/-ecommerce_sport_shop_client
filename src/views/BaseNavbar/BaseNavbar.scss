@@ -132,3 +132,33 @@
         align-items: center;
     }
 }
+
+.userDropDown {
+    position: relative;
+    .dropDownMenu {
+        position: absolute;
+        top: calc(100% + 1em);
+        right:0;
+        padding:10px;
+        border-radius: 5px;
+        display:none;
+        background-color: white;
+        min-width:200px;
+        &[data-show="true"] {
+            display:block;
+        }
+        
+        .dropDownItem  {
+            display: block;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            color: black;
+            text-decoration: none;
+            text-align: left;
+            &:hover {
+                background-color: #f5f5f5;
+            }
+        }
+    }
+}

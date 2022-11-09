@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import cartSlice, { setCartProducts } from "./cartSlice";
 
 interface AuthState {
   accessToken: string;
@@ -14,6 +15,14 @@ const initialState: Partial<AuthState> = {
   email: "",
   id: "",
 };
+
+export const authLogout = createAsyncThunk(
+  "auth/logout",
+  async (data: any, thunkAPI: any) => {
+    thunkAPI.dispatch(authSlice.actions.logout());
+    thunkAPI.dispatch(setCartProducts([]));
+  }
+)
 
 export const authSlice = createSlice({
   name: "authenticate",

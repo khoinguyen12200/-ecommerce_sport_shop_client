@@ -7,19 +7,34 @@ import { useParams } from 'react-router-dom';
 import { ENDPOINT } from '../../../config/config';
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper';
 import './ProductShow.scss';
-import { useAppDispatch } from '../../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { toast } from 'react-toastify';
-import { updateCart } from '../../../redux/cartSlice';
+import { addCartProduct } from '../../../redux/cartSlice';
 
 
 type Props = {}
 
 function ProductShow({ }: Props) {
+
+    const cartProducts = useAppSelector(state => state.cart.products) || [];
+
     let params = useParams();
     const productId = params.id;
     const [product, setProduct] = React.useState<ProductInterface>();
     const [mainImage, setMainImage] = React.useState<string | null>(null);
     const [quantity, setQuantity] = React.useState(1);
+
+    function decreaseQuantity() {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        } else {
+            setQuantity(1)
+        }
+    }
+
+    function increaseQuantity() {
+        setQuantity(quantity + 1);
+    }
 
     const dispatch = useAppDispatch();
 
@@ -33,22 +48,18 @@ function ProductShow({ }: Props) {
     }
 
     function addToCart() {
-        let cartItem: ProductCartInterface = {
-            productId: product?.id || '',
-            quantity: quantity,
-        }
-
         const variants =  document.querySelector('input[name="variant"]');
+        const variantEl = document.querySelector('input[name="variant"]:checked') as HTMLInputElement;
         if(variants) {
-            const variantEl = document.querySelector('input[name="variant"]:checked') as HTMLInputElement;
             if (!variantEl) {
                 toast.error('Vui lòng chọn loại sản phẩm');
                 return;
             }
-            cartItem.productId =  variantEl.value;
         }
-        
-        dispatch(updateCart(cartItem));
+        dispatch(addCartProduct({
+            productId: variantEl?.value || product?.id,
+            quantity
+        }))
     }
 
     if (!product) {
@@ -119,11 +130,11 @@ function ProductShow({ }: Props) {
                         <div className='orderSpaces d-flex justify-content-end '>
                             <div className='order input-group'>
                                 <div className="btn btn-secondary">
-                                    <button className="btn btn-secondary" onClick={() => setQuantity(quantity - 1)}>-</button>
+                                    <button className="btn btn-secondary" onClick={decreaseQuantity}>-</button>
                                     <span className='mx-2'>
                                         {quantity}
                                     </span>
-                                    <button className="btn btn-secondary" onClick={() => setQuantity(quantity + 1)}>+</button>
+                                    <button className="btn btn-secondary" onClick={increaseQuantity}>+</button>
                                 </div>
                                 <button className='btn btn-outline-dark btn-lg' onClick={addToCart} style={{ flex: 1 }}>Thêm vào giỏ hàng</button>
                                 <button className='btn btn-dark btn-lg' style={{ flex: 1 }}>Đặt hàng</button>

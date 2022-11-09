@@ -3,6 +3,7 @@ import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ENDPOINT } from "../config/config";
+import { RootState, useAppDispatch, useAppSelector } from './store';
 
 interface CartState {
     products: ProductCartInterface[];
@@ -18,7 +19,8 @@ const initialState: Partial<CartState> = {
 export const fetchCart = createAsyncThunk(
     "cart/fetchCart",
     async (payload: any, thunkAPI: any) => {
-        const loading = thunkAPI.getState().cart.isLoading;
+        const state = thunkAPI.getState() as RootState;
+        const loading = state.cart.isLoading;
         if (loading) {
             return;
         }
@@ -28,41 +30,44 @@ export const fetchCart = createAsyncThunk(
     }
 );
 
-export const updateCart = createAsyncThunk(
-    "cart/updateCart",
-    async (payload: ProductCartInterface, thunkAPI: any) => {
-        const loading = thunkAPI.getState().cart.isLoading;
+export const addCartProduct = createAsyncThunk(
+    "cart/addCartProduct",
+    async (payload: any, thunkAPI: any) => {
+        const state = thunkAPI.getState() as RootState;
+        const loading = state.cart.isLoading;
         if (loading) {
-            console.log("loading", loading);
             return;
         }
-        thunkAPI.dispatch(setCartLoading(true));
-        const response = await toast.promise(
-            axios.put(`${ENDPOINT}/user/cart`, {
-                cart: payload
-            }),
-            {
-                pending: "Đang cập nhật giỏ hàng",
-                success: "Cập nhật giỏ hàng thành công",
-                error: "Cập nhật giỏ hàng thất bại",
-            }
-        );
-        thunkAPI.dispatch(setCartLoading(false));
-        return response.data?.carts;
+        console.log("addCartProduct", payload);
+        const response = await axios.post(`${ENDPOINT}/user/cart/add`, payload);
+        return mapCartToProductCartInterface(response.data);
     }
 );
 
+function mapCartToProductCartInterface(cart:  any[]): ProductCartInterface[] {
+    return cart.map((item:any) => ({...item, productId: item.product.id}));
+}
 export const deleteCart = createAsyncThunk(
     "cart/deleteCart",
     async (payload: ProductCartInterface, thunkAPI: any) => {
-        const loading = thunkAPI.getState().cart.isLoading;
+        const state = thunkAPI.getState() as RootState;
+        const loading = state.cart.isLoading;
         if (loading) {
             return;
         }
-        thunkAPI.dispatch(setCartLoading(true));
-        const response = await axios.delete(`${ENDPOINT}/user/cart/${payload.id}`);
-        thunkAPI.dispatch(setCartLoading(false));
-        return response.data?.carts;
+
+        if(!state.account.accessToken) {
+            let products = state.cart.products || [];
+            //remove product from products
+            products = products.filter((product) => product.productId !== payload.productId);
+            return products;
+        } else {
+            thunkAPI.dispatch(setCartLoading(true));
+            const response = await axios.delete(`${ENDPOINT}/user/cart/${payload.id}`);
+            thunkAPI.dispatch(setCartLoading(false));
+            return mapCartToProductCartInterface(response.data?.carts);
+        }
+   
     }
 );
 
@@ -93,7 +98,7 @@ export const authSlice = createSlice({
             state.isLoading = false;
         });
 
-        builder.addCase(updateCart.fulfilled, (state, action) => {
+        builder.addCase(addCartProduct.fulfilled, (state, action) => {
             state.products = action.payload;
             state.isLoading = false;
         })

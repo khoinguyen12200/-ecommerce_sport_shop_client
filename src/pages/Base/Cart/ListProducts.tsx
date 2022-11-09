@@ -4,7 +4,7 @@ import './Cart.scss'
 import { useEffect } from 'react';
 import axios from 'axios';
 import { ENDPOINT } from '../../../config/config';
-import { deleteCart,  toggleCheckedCart,  updateCart } from '../../../redux/cartSlice';
+import { deleteCart,  toggleCheckedCart,  addCartProduct } from '../../../redux/cartSlice';
 import { getProductImagePath } from '../../../helper/PathHelper';
 import { BsArrowRightCircle, BsArrowRightCircleFill, BsCartDash, BsCheckCircle, BsCircle, BsFillCartPlusFill } from 'react-icons/bs';
 
@@ -43,21 +43,24 @@ function ProductItem({ product }: { product: ProductCartInterface }) {
     const dispatch = useAppDispatch();
 
     function addOne() {
-        const newProduct = { ...product, quantity: product.quantity + 1 };
-        dispatch(updateCart(newProduct))
+        dispatch(addCartProduct({
+            productId: product.productId || productDetail?.id,
+            quantity: 1
+        }))
     }
 
     function minusOne() {
         if (product.quantity <= 1) {
             const agree = window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?');
-            if (agree) {
-                dispatch(deleteCart(product));
+            if (!agree) {
+                return;
             }
-
-            return;
         }
-        const newProduct = { ...product, quantity: product.quantity - 1 };
-        dispatch(updateCart(newProduct))
+        
+        dispatch(addCartProduct({
+            productId: product.productId || productDetail?.id,
+            quantity: -1
+        }))
     }
 
     function toggleChecked() {

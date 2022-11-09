@@ -13,7 +13,9 @@ function CartManagement({ }: Props) {
     const dispatch = useAppDispatch();
     useEffect(() => {
         if(accessToken) {
-            dispatch(fetchCart({}))
+            setTimeout(() => {
+                dispatch(fetchCart({}))
+            }, 1000);
         }
     }, [accessToken])
 

@@ -4,6 +4,7 @@ import { FaBeer, FaUserCircle } from 'react-icons/fa';
 import './BaseNavbar.scss'
 import { useAppSelector } from '../../redux/store';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
+import UserDropDown from './UserDropDown';
 
 type Props = {}
 
@@ -46,23 +47,27 @@ function BaseNavbar({ }: Props) {
         </div>
       </div>
       <div className='userSpace'>
-        <Link to='/cart' className='itemLink fs-5 position-relative'>
+        <Link to='/cart' className='itemLink fs-5 position-relative px-3 mr-3'>
           <AiOutlineShoppingCart />
-          <span style={{fontSize:8, top: 15}} className='position-absolute px-2 start-100 translate-middle badge rounded-pill bg-secondary'>
+          <span style={{ fontSize: 8, top: 15, right: 0 }} className='position-absolute px-1 translate-middle badge rounded-pill bg-secondary'>
             {count}
           </span>
         </Link>
         {
           !account.accessToken ?
-            <Link to='login' className='itemLink fs-5'>
+            <Link to='login' className='itemLink fs-5 btn'>
               <FaUserCircle className='icon' />
             </Link> :
-            <Link to={account.role === 'ROLE_USER' ? 'user' : 'admin'} className='itemLink fs-5'>
-              <small style={{ fontSize: 14 }} className='mx-2'>
-                {account.email}
-              </small>
-              <FaUserCircle className='icon ml-1' />
-            </Link>
+            (
+              account.role === 'ROLE_ADMIN' ?
+                <Link to={'admin'} className='itemLink fs-5'>
+                  <small style={{ fontSize: 14 }} className='mx-2'>
+                    {account.email}
+                  </small>
+                  <FaUserCircle className='icon ml-1' />
+                </Link> :
+                <UserDropDown />
+            )
         }
       </div>
     </div>
