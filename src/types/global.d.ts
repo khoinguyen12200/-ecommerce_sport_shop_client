@@ -1,10 +1,16 @@
 export { };
 
 declare global {
-    /**
-     * Now declare things that go in the global namespace,
-     * or augment existing declarations in the global namespace.
-     */
+    interface UserInterface {
+        id: string;
+        email: string;
+        role: string;
+        name: string;
+        address: string;
+        phone: string;
+        city: string;
+    }
+
     interface CategoryInterface {
         id: string;
         name: string;

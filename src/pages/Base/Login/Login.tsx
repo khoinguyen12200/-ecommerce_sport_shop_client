@@ -47,16 +47,20 @@ function Login({ }: Props) {
     }
 
     async function sendForm() {
-        const res = await axios.post(ENDPOINT + '/login_check', {
+        const reqData = {
             username: email,
-                password: password
-        })
+            password: password
+        };
+
+        const res = await axios.post(ENDPOINT + '/login_check', reqData)
+        
         const data = res.data;
         dispatch(updateToken({
             accessToken: data.token,
             role: data.role,
             email: data.email,
-            id: data.id
+            id: data.id,
+            user: data.user
         }))
     }
 
@@ -64,9 +68,9 @@ function Login({ }: Props) {
         <div className='LoginPage'>
             {
                 account.accessToken && (
-                    account.role === 'ROLE_ADMIN' ? 
-                    <Navigate to='/admin' /> :
-                    <Navigate to='/user' />
+                    account.role === 'ROLE_ADMIN' ?
+                        <Navigate to='/admin' /> :
+                        <Navigate to='/user' />
                 )
             }
             <div className='loginContainer mt-5'>

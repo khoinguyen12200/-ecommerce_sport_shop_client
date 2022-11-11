@@ -26,7 +26,7 @@ export const fetchCart = createAsyncThunk(
         }
         thunkAPI.dispatch(setCartLoading(true));
         const response = await axios.get(`${ENDPOINT}/user/cart/all`);
-        return response.data?.carts;
+        return response.data?.data;
     }
 );
 
@@ -34,13 +34,15 @@ export const addCartProduct = createAsyncThunk(
     "cart/addCartProduct",
     async (payload: any, thunkAPI: any) => {
         const state = thunkAPI.getState() as RootState;
+        const dispatch = thunkAPI.dispatch;
+
         const loading = state.cart.isLoading;
         if (loading) {
             return;
         }
-        console.log("addCartProduct", payload);
+
         const response = await axios.post(`${ENDPOINT}/user/cart/add`, payload);
-        return mapCartToProductCartInterface(response.data);
+        return mapCartToProductCartInterface(response.data.data);
     }
 );
 

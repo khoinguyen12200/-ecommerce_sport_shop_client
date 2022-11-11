@@ -4,6 +4,7 @@ import {Routes, Route, BrowserRouter} from 'react-router-dom'
 import Base from './Base/Base'
 import Login from './Base/Login/Login'
 import Admin from './Admin/Admin'
+import User from './User/User'
 
 type Props = {}
 
@@ -13,6 +14,7 @@ function index({}: Props) {
         <Routes>
           <Route path='/*' element={<Base/>} />
           <Route path='/admin/*' element={<Admin/>} />
+          <Route path='/user/*' element={<User/>} />
         </Routes>
     </div>
   )

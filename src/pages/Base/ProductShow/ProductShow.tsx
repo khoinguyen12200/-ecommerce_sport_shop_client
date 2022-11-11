@@ -44,7 +44,7 @@ function ProductShow({ }: Props) {
     }, [productId]);
     async function fetchProduct() {
         const res = await axios.get(ENDPOINT + '/product/' + productId);
-        setProduct(res.data);
+        setProduct(res.data.data);
     }
 
     function addToCart() {

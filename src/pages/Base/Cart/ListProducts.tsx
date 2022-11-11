@@ -70,6 +70,7 @@ function ProductItem({ product }: { product: ProductCartInterface }) {
     if (!productDetail) {
         return <></>
     }
+    
     return (
         <div className="productItem">
             <div className="img">

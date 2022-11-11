@@ -19,7 +19,7 @@ function Product({ }: Props) {
         const path = ENDPOINT+'/products?'+paramsString;
 
         const res = await axios.get(path);
-        setProducts(res.data);
+        setProducts(res.data.data);
     }
 
     React.useEffect(() => {

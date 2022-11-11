@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { ENDPOINT } from "../config/config";
 import cartSlice, { setCartProducts } from "./cartSlice";
 
 interface AuthState {
@@ -7,6 +8,7 @@ interface AuthState {
   role: string;
   email: string;
   id: string;
+  user?: UserInterface
 }
 
 const initialState: Partial<AuthState> = {
@@ -24,6 +26,15 @@ export const authLogout = createAsyncThunk(
   }
 )
 
+export const reloadUserData = createAsyncThunk(
+  "auth/reloadUserData",
+  async (data: any, thunkAPI: any) => {
+    const res = await axios.get(ENDPOINT + "/user/me");
+    return res.data.data;
+  }
+)
+
+
 export const authSlice = createSlice({
   name: "authenticate",
   initialState,
@@ -33,7 +44,7 @@ export const authSlice = createSlice({
       state.role = action.payload.role;
       state.email = action.payload.email;
       state.id = action.payload.id;
-      //save accessToken to localStorage
+      state.user = action.payload.user;
       localStorage.setItem("accessToken", action.payload.accessToken);      
     },
     logout: (state) => {
@@ -41,11 +52,18 @@ export const authSlice = createSlice({
       state.role = "";
       state.email = "";
       state.id = "";
-      //remove accessToken from localStorage
       localStorage.removeItem("accessToken");
     },
+    setUser: (state, action: PayloadAction<UserInterface>) => {
+      state.user = action.payload;
+    }
   },
+  extraReducers: (builder) => {
+    builder.addCase(reloadUserData.fulfilled, (state, action) => {
+      state.user = action.payload;
+    })
+  }
 });
 
-export const { updateToken, logout } = authSlice.actions;
+export const { updateToken, logout, setUser } = authSlice.actions;
 export default authSlice.reducer;
