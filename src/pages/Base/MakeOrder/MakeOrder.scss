@@ -1,0 +1,12 @@
+.MakeOrder {
+    padding :1em;
+    .form {
+        min-width: 800px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        .submitBtn {
+            width: 100%;
+        }
+    }
+}

@@ -19,6 +19,16 @@ export const fetchProducts = createAsyncThunk(
     return res?.data?.products;
   }
 );
+
+export const fetchCategories = createAsyncThunk(
+  "adminData/fetchCategories",
+  async () => {
+    const res = await axios.get(ENDPOINT + '/admin/category');
+    return res?.data?.data;
+  }
+);
+
+
 export const adminDataSlice = createSlice({
   name: "adminData",
   initialState,
@@ -34,6 +44,9 @@ export const adminDataSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
       state.products = action.payload;
+    });
+    builder.addCase(fetchCategories.fulfilled, (state, action) => {
+      state.categories = action.payload;
     });
   }
 });

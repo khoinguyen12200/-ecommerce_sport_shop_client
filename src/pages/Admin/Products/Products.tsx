@@ -9,26 +9,43 @@ import axios from 'axios';
 import { toast } from 'react-toastify'
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper'
 import { setProducts } from '../../../redux/adminDataSlice'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 type Props = {}
 
 function Product({ }: Props) {
+    let [searchParams, setSearchParams] = useSearchParams();
 
+    const DEFAULT_SEARCH_PARAMS = {
+        root: true,
+        limit: 10,
+        page: 1,
+    };
 
-    const products = useAppSelector(state => state.admin.products);
-    const dispatch = useAppDispatch();
-    const categories = useAppSelector(state => state.admin.categories)
-
-    async function fetch() {
-        const res = await axios.get(ENDPOINT + '/admin/product');
-        const data = res?.data?.products;
-        dispatch(setProducts(data));
-    }
+    const [products, setProduct] = useState<ProductInterface[]>([])
+    const [pages, setPages] = useState(0);
 
     useEffect(() => {
-        fetch()
-    }, [])
+        fetchProducts();
+    }, [searchParams])
+
+    async function fetchProducts() {
+        const jsonParams = Object.fromEntries(searchParams.entries())
+
+        let params = {
+            ...DEFAULT_SEARCH_PARAMS,
+            ...jsonParams
+        };
+
+        const res = await axios.get(ENDPOINT + '/products', { params });
+        setProduct(res.data.data.products);
+        setPages(res.data.data.pages);
+    }
+
+    function getLinkToPage(page: number) {
+        const urlParams = new URLSearchParams(window.location.search)
+        return urlParams.toString();
+    }
 
     return (
         <BaseLayout title="Sản phẩm" rightSpace={
@@ -46,12 +63,12 @@ function Product({ }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {products && products.map((product: ProductInterface, index: number) => (
+                        {products.map((product: ProductInterface, index: number) => (
                             <tr key={index}>
                                 <td>{product.id}</td>
                                 <td>
                                     <div>
-                                    {product.name}
+                                        {product.name}
                                     </div>
                                     {
                                         product.variants && (
@@ -69,16 +86,29 @@ function Product({ }: Props) {
                                 <td>
                                     <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductImagePath(product.image)} />
                                 </td>
-                            
+
                                 <td className='text-center'>
                                     <Link to={`/admin/product/edit/${product.id}`} className="btn btn-sm btn-primary me-1">Sửa</Link>
                                     <ModalDeleteProduct reload={fetch} product={product} />
-                                    
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
+
+
+
+                <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                        {
+                            Array.from(Array(pages).keys()).map((page: number) => (
+                                <li className="page-item">
+                                    <Link className="page-link" to={`/admin/product?${getLinkToPage(page+1)}`}>{page + 1}</Link>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </nav>
             </div>
         </BaseLayout>
     )
@@ -89,7 +119,7 @@ function ProductGalleryItem({ gallery, product, reload }: { gallery: ProductGall
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    async function sendDelete(){
+    async function sendDelete() {
         toast.promise(
             deleteGallery(),
             {
@@ -110,7 +140,7 @@ function ProductGalleryItem({ gallery, product, reload }: { gallery: ProductGall
         <div className='position-relative'>
             <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductGalleryPath(gallery.path)} />
             <div className='position-absolute bottom-0 end-0'>
-            <button onClick={handleShow} className='btn btn-danger btn-sm'>x</button>
+                <button onClick={handleShow} className='btn btn-danger btn-sm'>x</button>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Xóa ảnh</Modal.Title>
@@ -131,7 +161,7 @@ function ProductGalleryItem({ gallery, product, reload }: { gallery: ProductGall
     )
 }
 
-function ModalAddProductGallery({product, reload}: {product: ProductInterface, reload: any}) {
+function ModalAddProductGallery({ product, reload }: { product: ProductInterface, reload: any }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -139,7 +169,7 @@ function ModalAddProductGallery({product, reload}: {product: ProductInterface, r
     const [file, setFile] = useState<File | null | undefined>(null);
     const [loading, setLoading] = useState(false);
 
-    async function sendAdd(){
+    async function sendAdd() {
         toast.promise(
             addGallery(),
             {
@@ -155,7 +185,7 @@ function ModalAddProductGallery({product, reload}: {product: ProductInterface, r
         const formData = new FormData();
         formData.append('file', file as File);
         await axios.post(ENDPOINT + '/admin/product/' + product.id + '/gallery', formData)
-        
+
         reload();
         setLoading(false);
     }
@@ -261,7 +291,7 @@ function ModalAddProduct({ reload }: any) {
                             <div className="form-check d-flex flex-wrap gap-2">
                                 {categories && categories.map((category: any, index: number) => (
                                     <div className='px-3'>
-                                        <input className="form-check-input" type="checkbox" name="categories[]" id={category.id} value={category.id} required/>
+                                        <input className="form-check-input" type="checkbox" name="categories[]" id={category.id} value={category.id} required />
                                         <label className="form-check-label" htmlFor={category.id}>
                                             {category.name}
                                         </label>
@@ -400,8 +430,8 @@ function ModalEditProduct({ reload, product }: any) {
                             <label htmlFor="image" className="form-label">Ảnh</label>
                             <input type="file" className="form-control" id="image" name="image" />
                         </div>
-                         {/* array size */}
-                         <div className="mb-3">
+                        {/* array size */}
+                        <div className="mb-3">
                             <label htmlFor="sizes" className="form-label">Size</label>
                             <input type="text" className="form-control" id="sizes" name="sizes" defaultValue={product.sizes} />
                         </div>

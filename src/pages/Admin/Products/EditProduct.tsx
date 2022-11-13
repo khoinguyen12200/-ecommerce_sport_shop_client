@@ -1,9 +1,11 @@
 import axios from 'axios';
-import React, { FormEvent } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
+import { Image } from 'react-bootstrap';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ENDPOINT } from '../../../config/config';
+import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper';
 import { useAppSelector } from '../../../redux/store';
 import BaseLayout from '../BaseLayout/BaseLayout';
 
@@ -16,7 +18,8 @@ function EditProduct({ }: Props) {
     const [product, setProduct] = React.useState<ProductInterface | null>(null);
     async function fetch() {
         const res = await axios.get(ENDPOINT + '/product/' + productId);
-        setProduct(res.data);
+        console.log(res.data);
+        setProduct(res.data.data);
     }
     React.useEffect(() => {
         fetch();
@@ -27,11 +30,21 @@ function EditProduct({ }: Props) {
     async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
+        const categories = document.querySelectorAll('input[name="categories[]"]:checked');
+        if (categories.length === 0) {
+            toast.error('Vui lòng chọn ít nhất một loại sản phẩm');
+            return;
+        }
+
         const form = e.target as HTMLFormElement;
-        const formData = new FormData(e.currentTarget);
+        const formData = new FormData(form);
+        const data = {
+            ...Object.fromEntries(formData.entries()),
+            categories: Array.from(categories).map((category: any) => category.value)
+        };
 
         await toast.promise(
-            sendForm(formData),
+            sendForm(data),
             {
                 pending: 'Đang sửa sản phẩm',
                 success: 'Sửa sản phẩm thành công',
@@ -44,12 +57,8 @@ function EditProduct({ }: Props) {
 
     }
 
-    async function sendForm(formData: FormData) {
-        let res = await axios.post(ENDPOINT + '/admin/product/edit/' + product?.id, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
+    async function sendForm(formData: any) {
+        let res = await axios.put(ENDPOINT + '/admin/product/' + product?.id, formData)
     }
 
     async function handleDeleteProduct() {
@@ -78,26 +87,26 @@ function EditProduct({ }: Props) {
         return <div>Loading...</div>
     }
     return (
-        <BaseLayout 
-        title={product.parent ? 'Sửa biến thể sản phẩm' : 'Sửa sản phẩm'}
-        rightSpace={ 
-            product.parent ?
-            <Link to={`/admin/product/edit/${product.parent}`} className="btn btn-outline-dark btn-sm">
-                <FaArrowLeft></FaArrowLeft> Quay lại
-            </Link> :
-            <Link to={`/admin/product`} className="btn btn-outline-dark btn-sm">
-            <FaArrowLeft></FaArrowLeft> Quay lại
-        </Link>
-        }
+        <BaseLayout
+            title={product.parentId ? 'Sửa biến thể sản phẩm' : 'Sửa sản phẩm'}
+            rightSpace={
+                product.parentId ?
+                    <Link to={`/admin/product/edit/${product.parentId}`} className="btn btn-outline-dark btn-sm">
+                        <FaArrowLeft></FaArrowLeft> Quay lại
+                    </Link> :
+                    <Link to={`/admin/product`} className="btn btn-outline-dark btn-sm">
+                        <FaArrowLeft></FaArrowLeft> Quay lại
+                    </Link>
+            }
         >
 
             <form onSubmit={handleSubmitForm} method="POST" className='EditProductForm'>
                 {
-                    product.parent && (
+                    product.parentId && (
                         <div className="mb-3">
                             <label htmlFor="variantName" className="form-label">
                                 <b>
-                                Tên biến thể
+                                    Tên biến thể
                                 </b>
                             </label>
                             <input required type="text" className="form-control" name="variantName" id="variantName" defaultValue={product.variantName} />
@@ -108,6 +117,8 @@ function EditProduct({ }: Props) {
                     <label htmlFor="name" className="form-label">Tên sản phẩm</label>
                     <input type="text" className="form-control" id="name" name="name" required defaultValue={product.name} />
                 </div>
+                <ProductImage product={product} fetch={fetch} />
+                <ProductGalleryImages product={product} fetch={fetch} />
                 <Variants product={product} reload={fetch} />
                 {/* description */}
                 <div className="mb-3">
@@ -140,10 +151,6 @@ function EditProduct({ }: Props) {
                     <label htmlFor="price" className="form-label">Giá</label>
                     <input type="number" className="form-control" id="price" name="price" required defaultValue={product.price} />
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="image" className="form-label">Ảnh</label>
-                    <input type="file" className="form-control" id="image" name="image" />
-                </div>
                 {/* quantity */}
                 <div className="mb-3">
                     <label htmlFor="quantity" className="form-label">Số lượng</label>
@@ -158,7 +165,7 @@ function EditProduct({ }: Props) {
                 <button type="submit" className="btn btn-primary">
                     Sửa sản phẩm
                 </button>
-                
+
                 <button type="button" onClick={handleDeleteProduct} className="btn btn-outline-danger ms-2">
                     Xóa
                 </button>
@@ -167,42 +174,156 @@ function EditProduct({ }: Props) {
     )
 }
 
-function Variants({ product, reload }: { product: ProductInterface, reload: any }) {
+function ProductImage({ product, fetch }: { product: ProductInterface, fetch: any }) {
 
+    const [image, setImage] = useState<any>(null);
 
-    async function addVariant() {
-        const name = prompt('Nhập tên biến thể');
-        if (name) {
+    function onChangeImage(e: any) {
+        if (e.target.files.length > 0) {
+            const files = Array.from(e.target.files);
             const formData = new FormData();
-            formData.append('variantName', name);
-            formData.append('name', product.name);
-            formData.append('description', product.description);
-            formData.append('price', product.price.toString());
-            formData.append('quantity', product.quantity.toString());
-            formData.append('unit', product.unit);
-
-            const res = await axios.post(ENDPOINT + `/admin/product/${product.id}/variant`, formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    }
-                });
-            reload();
+            files.forEach((file: any, i) => {
+                setImage(file);
+            })
         }
     }
 
-    async function sendAddVarirant() {
-        toast.promise(
-            addVariant(),
-            {
-                pending: 'Đang thêm biến thể',
-                success: 'Thêm biến thể thành công',
-                error: 'Thêm biến thể thất bại'
+    useEffect(() => {
+        if (image) {
+            sendImages();
+        }
+    }, [image])
+
+    async function sendImages() {
+        const formData = new FormData();
+        formData.append('image', image);
+        await axios.post(`${ENDPOINT}/admin/product/${product.id}/image`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
             }
-        )
+        });
+        toast.success('Cập nhật ảnh thành công');
+        fetch();
     }
 
-    if(product.parent) {
+    return (
+        <div className="mb-3">
+            <label htmlFor="image" className="form-label">Ảnh đại diện</label>
+            <input className="form-control" type="file" id="image" onChange={onChangeImage} />
+            {
+                product.image && (
+                    <div className='p-2'>
+                        <Image src={getProductImagePath(product.image)} alt={product.name} thumbnail width={100} height={100} />
+                    </div>
+                )
+            }
+        </div>
+    )
+}
+
+function ProductGalleryImages({ product, fetch }: { product: ProductInterface, fetch: any }) {
+
+    const [image, setImage] = useState<any>(null);
+
+    function onChangeImage(e: any) {
+        if (e.target.files.length > 0) {
+            const files = Array.from(e.target.files);
+            const formData = new FormData();
+            files.forEach((file: any, i) => {
+                setImage(file);
+            })
+        }
+    }
+
+    useEffect(() => {
+        if (image) {
+            sendImages();
+        }
+    }, [image])
+
+    async function sendImages() {
+        const formData = new FormData();
+        formData.append('file', image);
+        await axios.post(`${ENDPOINT}/admin/product/${product.id}/gallery`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        setImage(null);
+        toast.success('Cập nhật ảnh thành công');
+        fetch();
+    }
+
+    async function handleDeleteGallery(id: string) {
+        const confirm = window.confirm('Bạn có chắc chắn muốn xóa ảnh này?');
+        if (confirm) {
+            await axios.delete(`${ENDPOINT}/admin/product/${product.id}/gallery/${id}`);
+            toast.success('Xóa ảnh thành công');
+            fetch();
+        }
+    }
+
+    return (
+        <div className="mb-3">
+            <label htmlFor="image" className="form-label">Ảnh mô tả sản phẩm</label>
+            <input className="form-control" type="file" onChange={onChangeImage} />
+            {
+                product.productGalleries && (
+                    <div className='p-2 d-flex flex-wrap align-items-end'>
+                        {
+                            product.productGalleries.map((gallery: ProductGalleryInterface) => (
+                                <div className='p-3 position-relative'>
+                                    <img className='border rounded p-1' src={getProductGalleryPath(gallery.path)} alt={product.name} width={100} height={100} />
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-secondary position-absolute top-0 end-0 m-1"
+                                        onClick={() => handleDeleteGallery(gallery.id)}>
+                                        Xóa
+                                    </button>
+                                </div>
+                            ))
+                        }
+                    </div>
+                )
+            }
+        </div>
+    )
+}
+
+function Variants({ product, reload }: { product: ProductInterface, reload: any }) {
+
+
+    async function addVariant(name: string) {
+        const variantData = {
+            variantName: name,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            quantity: product.quantity,
+            unit: product.unit,
+            parentId: product.id,
+            categories: product.categories.map((category: CategoryInterface) => category.id),
+        };
+
+        const res = await axios.post(ENDPOINT + `/admin/product`, variantData);
+        reload();
+    }
+
+    async function sendAddVarirant() {
+        const name = prompt('Nhập tên biến thể');
+        if (name) {
+            toast.promise(
+                addVariant(name),
+                {
+                    pending: 'Đang thêm biến thể',
+                    success: 'Thêm biến thể thành công',
+                    error: 'Thêm biến thể thất bại'
+                }
+            )
+        }
+    }
+
+    if (product.parentId) {
         return <></>
     }
 

@@ -11,12 +11,7 @@ type Props = {}
 
 function Category({ }: Props) {
     const categories = useAppSelector(state => state.admin.categories);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        fetchCategories(dispatch);
-    }, [])
-
+    
     return (
         <BaseLayout title="Phân loại">
             <Table  striped bordered hover>

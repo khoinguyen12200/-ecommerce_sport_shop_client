@@ -7,9 +7,8 @@ import OrderSpace from './OrderSpace'
 type Props = {}
 
 function Cart({ }: Props) {
-    const products = useAppSelector(state => state.cart.products) || [];
     return (
-        <div className='CartPage'>
+        <div className='CartPage contentOrderProcess'>
             <ListProducts/>
             <OrderSpace/>
         </div>

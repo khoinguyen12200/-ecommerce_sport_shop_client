@@ -1,0 +1,30 @@
+.orderBreadcrumb {
+    border-bottom: 1px solid grey;
+    background: #f5f5f5;
+    .link {
+        color: black;
+        padding: 1em;
+        text-decoration: none;
+        flex: 1;
+        text-align: center;
+        height: 60px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        border-right: 2px solid grey;
+        &.active {
+            border-right: 2px solid royalblue;
+            color: royalblue;
+            font-weight: bold;
+        }
+    }
+
+}
+
+.contentOrderProcess {
+    height: calc(100vh - 65px - 62px);
+    overflow-y: scroll;
+}

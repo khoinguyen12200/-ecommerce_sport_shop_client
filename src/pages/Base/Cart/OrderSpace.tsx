@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { Image, Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { getProductImagePath } from '../../../helper/PathHelper';
 import { useAppSelector } from '../../../redux/store'
 import './Cart.scss'
@@ -58,7 +59,7 @@ function OrderSpace({ }: Props) {
                     </div>
 
                 </div>
-                <button className="submitBtn">Đặt hàng</button>
+                <Link to='/make_order' className="btn btn-dark rounded-0 submitBtn">Đặt hàng</Link>
             </div>
         </div>
     )

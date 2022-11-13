@@ -25,46 +25,42 @@ function AddProduct({ }: Props) {
 
     async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        //require categories checkbox atleast one
-        const categories = document.querySelectorAll('input[name="categories"]:checked');
+
+        const categories = document.querySelectorAll('input[name="categories[]"]:checked');
         if (categories.length === 0) {
             toast.error('Vui lòng chọn ít nhất một loại sản phẩm');
             return;
         }
 
-   
         setLoading(true);
         
 
-        const form = e.target as HTMLFormElement;
-        //get all value to json
+        //get all form data to json
         const formData = new FormData(e.currentTarget);
-
+        const data = {
+            ...Object.fromEntries(formData.entries()) ,
+            categories: Array.from(categories).map((category: any) => category.value)
+        };
+       
         //toastify loading
         await toast.promise(
-            sendForm(formData),
+            sendForm(data),
             {
                 pending: 'Đang thêm sản phẩm',
                 success: 'Thêm sản phẩm thành công',
                 error: 'Thêm sản phẩm thất bại'
             }
-        ).then(() => {
-            form.reset();
-            dispatch(fetchProducts());
-            navigate('/admin/product');
-        }).finally(() => {
+        ).finally(() => {
             setLoading(false);
             handleClose();
         })
 
     }
 
-    async function sendForm(formData: FormData) {
-        let res = await axios.post(ENDPOINT + '/admin/product', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
+    async function sendForm(data: any) {
+        let res = await axios.post(ENDPOINT + '/admin/product', data)
+
+        navigate('/admin/products')
     }
 
     return (
@@ -99,14 +95,10 @@ function AddProduct({ }: Props) {
                     <label htmlFor="price" className="form-label">Giá</label>
                     <input type="number" className="form-control" id="price" name="price" required />
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="image" className="form-label">Ảnh</label>
-                    <input type="file" className="form-control" id="image" name="image" />
-                </div>
                 {/* quantity */}
                 <div className="mb-3">
                     <label htmlFor="quantity" className="form-label">Số lượng</label>
-                    <input type="number" className="form-control" id="quantity" />
+                    <input type="number" className="form-control" name="quantity" id="quantity" />
                 </div>
                 {/* unit */}
                 <div className="mb-3">

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { useAppSelector } from '../../redux/store'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../redux/store'
 import AdminNavBar from '../../views/AdminNavBar/AdminNavBar'
 import AdminSideBar from '../../views/AdminSideBar/AdminSideBar'
 import './Admin.scss'
@@ -9,15 +9,27 @@ import { useEffect } from 'react';
 import Category from './Category/Category';
 import AddProduct from './Products/AddProduct'
 import EditProduct from './Products/EditProduct'
+import { fetchCategories } from '../../redux/adminDataSlice'
 type Props = {}
 
 function Admin({ }: Props) {
   const account = useAppSelector(state => state.account);
-  useEffect(() => {
-    if (account.role !== 'admin') {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [])
+
+
+  useEffect(() => {
+    if (account.role !== 'ROLE_ADMIN') {
+      navigate('/');
     }
   }, [account]);
+
+
+
   return (
     <div className='AdminPages d-flex'>
       {account.role !== 'ROLE_ADMIN' && (

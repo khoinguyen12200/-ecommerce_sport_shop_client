@@ -37,7 +37,7 @@ declare global {
         productGalleries: ProductGalleryInterface[];
         unit: string;
         variants: ProductInterface[];
-        parent?: number;
+        parentId?: string;
         variantName: string;
     }
 
@@ -48,5 +48,15 @@ declare global {
         product?: ProductInterface;
         checked?: boolean;
     }
-}
 
+    interface OrderInformation {
+        name: string;
+        email: string;
+        address: string;
+        phone: string;
+        city: string;
+        note: string;
+    }
+
+    
+}

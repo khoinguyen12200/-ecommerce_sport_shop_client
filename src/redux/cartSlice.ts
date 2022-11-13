@@ -7,25 +7,34 @@ import { RootState, useAppDispatch, useAppSelector } from './store';
 
 interface CartState {
     products: ProductCartInterface[];
+    orderInformation: OrderInformation | null;
     isLoading: boolean;
+    couponCode?: couponCode
+
 }
+
+type couponCode = Array<string>;
+
 
 
 const initialState: Partial<CartState> = {
     products: [],
+    orderInformation: null,
     isLoading: false,
+    couponCode: []
 };
 
 export const fetchCart = createAsyncThunk(
     "cart/fetchCart",
     async (payload: any, thunkAPI: any) => {
         const state = thunkAPI.getState() as RootState;
+        const dispatch = thunkAPI.dispatch;
         const loading = state.cart.isLoading;
         if (loading) {
             return;
         }
-        thunkAPI.dispatch(setCartLoading(true));
         const response = await axios.get(`${ENDPOINT}/user/cart/all`);
+        dispatch(setOrderInformation(null))
         return response.data?.data;
     }
 );
@@ -35,11 +44,6 @@ export const addCartProduct = createAsyncThunk(
     async (payload: any, thunkAPI: any) => {
         const state = thunkAPI.getState() as RootState;
         const dispatch = thunkAPI.dispatch;
-
-        const loading = state.cart.isLoading;
-        if (loading) {
-            return;
-        }
 
         const response = await axios.post(`${ENDPOINT}/user/cart/add`, payload);
         return mapCartToProductCartInterface(response.data.data);
@@ -64,9 +68,7 @@ export const deleteCart = createAsyncThunk(
             products = products.filter((product) => product.productId !== payload.productId);
             return products;
         } else {
-            thunkAPI.dispatch(setCartLoading(true));
             const response = await axios.delete(`${ENDPOINT}/user/cart/${payload.id}`);
-            thunkAPI.dispatch(setCartLoading(false));
             return mapCartToProductCartInterface(response.data?.carts);
         }
    
@@ -92,7 +94,15 @@ export const authSlice = createSlice({
                     state.products[index].checked = !state.products[index].checked;
                 }
             }
+        },
+        setOrderInformation: (state, action: PayloadAction<OrderInformation | null>) => {
+            state.orderInformation = action.payload;
+        },
+        setCartCouponCode: (state, action: PayloadAction<couponCode>) => {
+            state.couponCode = action.payload;
         }
+
+    
     },
     extraReducers: (builder) => {
         builder.addCase(fetchCart.fulfilled, (state, action) => {
@@ -112,5 +122,5 @@ export const authSlice = createSlice({
     }
 });
 
-export const { setCartProducts, setCartLoading, toggleCheckedCart } = authSlice.actions;
+export const { setCartProducts, setCartLoading, toggleCheckedCart, setOrderInformation ,setCartCouponCode } = authSlice.actions;
 export default authSlice.reducer;
