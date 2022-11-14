@@ -2,29 +2,45 @@ import axios from 'axios';
 import React, { FormEvent, useEffect, useState } from 'react'
 import { Image } from 'react-bootstrap';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ENDPOINT } from '../../../config/config';
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper';
-import { useAppSelector } from '../../../redux/store';
+import { useAppSelector, useAppDispatch } from '../../../redux/store';
 import BaseLayout from '../BaseLayout/BaseLayout';
+import ReactQuill from 'react-quill';
+import BaseContent from '../BaseContent';
+import { setLoading } from '../../../redux/loadingSlice';
 
 type Props = {}
 
 function EditProduct({ }: Props) {
     const categories = useAppSelector(state => state.admin.categories);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     let params = useParams();
     const productId = params.id;
     const [product, setProduct] = React.useState<ProductInterface | null>(null);
     async function fetch() {
-        const res = await axios.get(ENDPOINT + '/product/' + productId);
-        console.log(res.data);
-        setProduct(res.data.data);
+        dispatch(setLoading(true));
+        try {
+            const res = await axios.get(ENDPOINT + '/product/' + productId);
+            setProduct(res.data.data);
+        } catch (error) {
+            toast.error('Lỗi khi lấy dữ liệu sản phẩm');
+        }
+        dispatch(setLoading(false));
     }
     React.useEffect(() => {
         fetch();
     }, [productId]);
 
+
+    //product description
+    const [description, setDescription] = useState<string>(product?.description || '');
+    useEffect(() => {
+        setDescription(product?.description || '');
+    }, [product?.description])
 
 
     async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
@@ -40,6 +56,7 @@ function EditProduct({ }: Props) {
         const formData = new FormData(form);
         const data = {
             ...Object.fromEntries(formData.entries()),
+            description,
             categories: Array.from(categories).map((category: any) => category.value)
         };
 
@@ -67,6 +84,8 @@ function EditProduct({ }: Props) {
             return;
         }
 
+        dispatch(setLoading(true));
+
         toast.promise(
             sendDelete(),
             {
@@ -75,6 +94,9 @@ function EditProduct({ }: Props) {
                 error: 'Xóa sản phẩm thất bại'
             }
         )
+
+        dispatch(setLoading(false));
+        navigate('/admin/product');
     }
 
     async function sendDelete() {
@@ -87,9 +109,9 @@ function EditProduct({ }: Props) {
         return <div>Loading...</div>
     }
     return (
-        <BaseLayout
+        <BaseContent
             title={product.parentId ? 'Sửa biến thể sản phẩm' : 'Sửa sản phẩm'}
-            rightSpace={
+            rightContent={
                 product.parentId ?
                     <Link to={`/admin/product/edit/${product.parentId}`} className="btn btn-outline-dark btn-sm">
                         <FaArrowLeft></FaArrowLeft> Quay lại
@@ -120,12 +142,10 @@ function EditProduct({ }: Props) {
                 <ProductImage product={product} fetch={fetch} />
                 <ProductGalleryImages product={product} fetch={fetch} />
                 <Variants product={product} reload={fetch} />
-                {/* description */}
+
                 <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Mô tả</label>
-                    <textarea className="form-control" id="description" name="description" rows={3}
-                        defaultValue={product.description}
-                    ></textarea>
+                    <label htmlFor="price" className="form-label">Mô tả sản phẩm</label>
+                    <ReactQuill theme="snow" value={description} onChange={setDescription} />
                 </div>
                 {/* categories multiple */}
                 <div>
@@ -170,7 +190,7 @@ function EditProduct({ }: Props) {
                     Xóa
                 </button>
             </form>
-        </BaseLayout>
+        </BaseContent>
     )
 }
 

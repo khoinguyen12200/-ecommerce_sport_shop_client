@@ -3,10 +3,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import authReducer from "./authSlice";
 import adminDataReducer from "./adminDataSlice";
 import cartReducer from "./cartSlice";
+import loadingReducer from "./loadingSlice";
 
 const loadState = () => {
   try {
-    const serializedState = localStorage.getItem("LocalState");
+    const serializedState = localStorage.getItem("State");
     if (serializedState === null) {
       return undefined;
     }
@@ -19,7 +20,7 @@ const loadState = () => {
 const saveState = (state: any) => {
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem("LocalState", serializedState);
+    localStorage.setItem("State", serializedState);
   } catch (e) {
     // Ignore write errors;
   }
@@ -30,6 +31,7 @@ export const store = configureStore({
     account: authReducer,
     admin: adminDataReducer,
     cart: cartReducer,
+    loading: loadingReducer,
   },
   preloadedState: loadState(),
   devTools: true,

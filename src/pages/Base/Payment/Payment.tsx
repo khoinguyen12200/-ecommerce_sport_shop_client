@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Button, Spinner, Tab, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ENDPOINT } from '../../../config/config';
-import { setCartCouponCode } from '../../../redux/cartSlice';
+import { DEFAULT_COUPONS } from '../../../config/constant';
+import { deleteCart, setCartCouponCode } from '../../../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../../../redux/store'
 import { InvoiceInterface, PaymentMethodInterface } from '../../../types/InvoiceInterfaces';
 import './Payment.scss'
@@ -13,6 +14,15 @@ type Props = {}
 
 function Payment({ }: Props) {
     const { orderInformation, products, couponCode } = useAppSelector(state => state.cart);
+
+    const checkedProducts = useMemo(() => (
+        products?.filter(product => product.checked) || []
+    ), [products])
+
+
+    const dispatch = useAppDispatch();
+
+    const [loading, setLoading] = React.useState(false);
 
     const [loaded, setLoaded] = React.useState(false);
     const navigate = useNavigate();
@@ -31,27 +41,32 @@ function Payment({ }: Props) {
                 toast.warning('Bạn chưa điền thông tin đặt hàng');
                 navigate('/cart');
             }
+            if(checkedProducts.length === 0) {
+                toast.warning('Bạn chưa chọn sản phẩm nào');
+                navigate('/cart');
+            }
         }
     }, [loaded, orderInformation])
 
     useEffect(() => {
         checkInvoice()
-    }, [products, couponCode, paymentMethod])
-
-    function onPaymentChange(e: any) {
-        console.log(e.target.value);
-    }
+    }, [checkedProducts, couponCode, paymentMethod])
 
     async function checkInvoice() {
+        setLoading(true);
         const data = {
             ...orderInformation,
-            items: products,
+            items: checkedProducts,
             paymentMethod: paymentMethod,
             couponCode: couponCode
         }
-        const res = await axios.post(ENDPOINT + '/invoice_check', data);
-        setInvoice(res.data.data.invoice)
-        console.log(res.data.data.invoice);
+        try {
+            const res = await axios.post(ENDPOINT + '/invoice_check', data);
+            setInvoice(res.data.data.invoice)
+        } catch (error) {
+        }
+
+        setLoading(false);
     }
 
     async function handleSubmit() {
@@ -66,16 +81,27 @@ function Payment({ }: Props) {
     async function sendOrder() {
         const data = {
             ...orderInformation,
-            items: products,
+            items: checkedProducts,
             paymentMethod: paymentMethod,
             couponCode: couponCode
         }
         const res = await axios.post(ENDPOINT + '/invoice', data);
         const { invoiceLink } = res.data.data;
-        window.location.href = invoiceLink;
+        products?.forEach(product => {
+            dispatch(deleteCart(product))
+        })
+        toast.success('Tự chuyển hướng sau 3s', {
+            autoClose: 3000,
+        });
+
+        setTimeout(() => {
+            dispatch(setCartCouponCode(DEFAULT_COUPONS));
+            window.location.href = invoiceLink;
+        }, 3000)
     }
 
-    if (!invoice) return <div className="contentOrderProcess PaymentPage">
+
+    if (loading || !invoice) return <div className="contentOrderProcess PaymentPage">
         <div className="d-flex justify-content-center align-items-center m-5 mx-auto fs-1">
             <Spinner animation='border' variant='secondary' />
         </div>
@@ -114,7 +140,14 @@ function Payment({ }: Props) {
                     </tbody>
                 </Table>
                 <AddCoupon />
-                <Table variant='success' striped bordered hover>
+                <Table variant='light' striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {
                             invoice?.invoiceItems.map((item: any, index: number) => (
@@ -180,7 +213,7 @@ function Payment({ }: Props) {
                         </tr>
                     </tbody>
                 </Table>
-                <div className=' mb-3 mt-3' onChange={onPaymentChange}>
+                <div className=' mb-3 mt-3'>
                     <div className="form-check" onClick={() => setPaymentMethod(PaymentMethodInterface.CASH)}>
                         <input className="form-check-input" type="radio" name="paymentMethod" checked={paymentMethod === PaymentMethodInterface.CASH} />
                         <label className="form-check-label" htmlFor="cash">
@@ -222,7 +255,7 @@ function AddCoupon() {
                 Mã giảm giá
             </span>
             <input type="text" className="form-control" placeholder="GIAM_GIA" aria-label="000" value={coupon} onChange={e => setCoupon(e.target.value)} />
-            <button className="btn btn-outline-secondary" type="button" onClick={addCoupon}>Kiểm tra</button>
+            <button className="btn btn-dark" type="button" onClick={addCoupon}>Kiểm tra</button>
         </div>
     )
 }

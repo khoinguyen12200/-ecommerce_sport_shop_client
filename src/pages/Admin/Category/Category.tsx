@@ -6,6 +6,7 @@ import { ENDPOINT } from '../../../config/config';
 import { Table } from 'react-bootstrap';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { fetchCategories } from './CategoryState';
+import BaseContent from '../BaseContent';
 
 type Props = {}
 
@@ -13,7 +14,7 @@ function Category({ }: Props) {
     const categories = useAppSelector(state => state.admin.categories);
     
     return (
-        <BaseLayout title="Phân loại">
+        <BaseContent title="Phân loại">
             <Table  striped bordered hover>
                 <thead>
                     <tr>
@@ -34,7 +35,7 @@ function Category({ }: Props) {
                     }
                 </tbody>
             </Table>
-        </BaseLayout>
+        </BaseContent>
     )
 }
 

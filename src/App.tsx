@@ -4,6 +4,9 @@ import './_library.scss';
 import './default.scss';
 import axios from 'axios';
 import { useAppSelector } from './redux/store';
+import 'react-quill/dist/quill.snow.css';
+import './templates/css/argon-dashboard-react.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
 function App() {

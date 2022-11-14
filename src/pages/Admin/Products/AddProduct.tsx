@@ -7,6 +7,8 @@ import { ENDPOINT } from '../../../config/config'
 import { fetchProducts } from '../../../redux/adminDataSlice'
 import { useAppDispatch, useAppSelector } from '../../../redux/store'
 import BaseLayout from '../BaseLayout/BaseLayout'
+import BaseContent from '../BaseContent';
+import ReactQuill from 'react-quill';
 
 type Props = {}
 
@@ -15,6 +17,7 @@ function AddProduct({ }: Props) {
     const categories = useAppSelector(state => state.admin.categories)
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const [description, setDescription] = useState('');
 
     const [show, setShow] = useState(false);
 
@@ -39,6 +42,7 @@ function AddProduct({ }: Props) {
         const formData = new FormData(e.currentTarget);
         const data = {
             ...Object.fromEntries(formData.entries()) ,
+            description,
             categories: Array.from(categories).map((category: any) => category.value)
         };
        
@@ -64,16 +68,15 @@ function AddProduct({ }: Props) {
     }
 
     return (
-        <BaseLayout title="Thêm sản phẩm">
+        <BaseContent title="Thêm sản phẩm">
             <form onSubmit={handleSubmitForm}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Tên sản phẩm</label>
                     <input type="text" className="form-control" id="name" name="name" required />
                 </div>
-                {/* description */}
                 <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Mô tả</label>
-                    <textarea className="form-control" id="description" name="description" rows={3}></textarea>
+                    <label htmlFor="price" className="form-label">Mô tả sản phẩm</label>
+                    <ReactQuill theme="snow" value={description} onChange={setDescription} />
                 </div>
                 {/* categories multiple */}
                 <div className="mb-3">
@@ -111,7 +114,7 @@ function AddProduct({ }: Props) {
                     {loading && <Spinner className='ms-2' animation="grow" size='sm' />}
                 </Button>
             </form>
-        </BaseLayout>
+        </BaseContent>
     )
 }
 

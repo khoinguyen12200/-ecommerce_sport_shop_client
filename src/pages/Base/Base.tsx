@@ -13,6 +13,7 @@ import MakeOrder from './MakeOrder/MakeOrder';
 import OrderBreadcrumb from './OrderBreadcrumb';
 import './Base.scss'
 import Payment from './Payment/Payment';
+import MyInvoice from './MyInvoice/MyInvoice';
 
 
 type Props = {}
@@ -38,6 +39,7 @@ function Base({ }: Props) {
         <Route path='/cart' element={<Cart />} />
         <Route path='/make_order' element={<MakeOrder/>} />
         <Route path='/payment' element={<Payment/>} />
+        <Route path='/my_invoice' element={<MyInvoice/>} />
       </Routes>
     </div>
   )

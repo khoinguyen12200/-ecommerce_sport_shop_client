@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/store';
 import { authLogout, logout } from '../../redux/authSlice';
 import { toast } from 'react-toastify';
+import {HiInformationCircle} from 'react-icons/hi'
+import {ImExit} from 'react-icons/im'
+
+
 
 type Props = {}
 
@@ -37,10 +41,10 @@ function UserDropDown({ }: Props) {
             <FaUserCircle onClick={toggleShow} className='icon ml-1' />
             <div className="dropDownMenu shadow" data-show={show && 'true'}>
                 <Link to='/user' className="dropDownItem">
-                    Thông tin
+                    <HiInformationCircle className='me-1 mb-1'/> Thông tin
                 </Link>
                 <div onClick={handleLogout} className="dropDownItem text-danger">
-                    Đăng xuất
+                    <ImExit className='me-1 mb-1'/> Đăng xuất
                 </div>
             </div>
         </div>

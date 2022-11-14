@@ -1,17 +1,28 @@
 .InformationPage {
+    position: relative;
+    .bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: -1;
+        height: 100%;
+        object-fit: cover;
+    }
     .userWrapper {
         margin: 100px auto;
         margin-bottom: 50px;
         max-width: 600px;
-        background-color: lightgrey;
+        background-color: white;
         padding: 10px;
         border-radius: 5px;
         .avatarWrapper {
             display:flex;
             justify-content: center;
             .userAvatar {
-                color:white;
-                background: rgb(2,0,36);
+                color:black;
+                background: white;
+                // border: 2px solid black;
 
                 width:100px;
                 height: 100px;

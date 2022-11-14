@@ -3,13 +3,14 @@ import React from 'react'
 import { FaTruck } from 'react-icons/fa';
 import { GiStarMedal } from 'react-icons/gi';
 import { MdOutlineSwapHorizontalCircle } from 'react-icons/md';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ENDPOINT } from '../../../config/config';
 import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper';
 import './ProductShow.scss';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { toast } from 'react-toastify';
-import { addCartProduct } from '../../../redux/cartSlice';
+import { addCartProduct, setCartProductChecked } from '../../../redux/cartSlice';
+import { useEffect } from 'react';
 
 
 type Props = {}
@@ -23,6 +24,7 @@ function ProductShow({ }: Props) {
     const [product, setProduct] = React.useState<ProductInterface>();
     const [mainImage, setMainImage] = React.useState<string | null>(null);
     const [quantity, setQuantity] = React.useState(1);
+    const navigate = useNavigate();
 
     function decreaseQuantity() {
         if (quantity > 1) {
@@ -48,9 +50,9 @@ function ProductShow({ }: Props) {
     }
 
     function addToCart() {
-        const variants =  document.querySelector('input[name="variant"]');
+        const variants = document.querySelector('input[name="variant"]');
         const variantEl = document.querySelector('input[name="variant"]:checked') as HTMLInputElement;
-        if(variants) {
+        if (variants) {
             if (!variantEl) {
                 toast.error('Vui lòng chọn loại sản phẩm');
                 return;
@@ -60,6 +62,35 @@ function ProductShow({ }: Props) {
             productId: variantEl?.value || product?.id,
             quantity
         }))
+    }
+
+    const [loadOrder, setLoadOrder] = React.useState(false);
+    const [loadedOrder, setLoadedOrder] = React.useState(false);
+
+    async function orderThisProduct() {
+        const variants = document.querySelector('input[name="variant"]');
+        const variantEl = document.querySelector('input[name="variant"]:checked') as HTMLInputElement;
+        if (variants) {
+            if (!variantEl) {
+                toast.error('Vui lòng chọn loại sản phẩm');
+                return;
+            }
+        }
+        let thisQuantity = quantity;
+        cartProducts.forEach(productItem => {
+            if (productItem.productId == (variantEl?.value || product?.id)) {
+                thisQuantity = thisQuantity - productItem.quantity;
+
+            }
+        })
+
+        await dispatch(addCartProduct({
+            productId: variantEl?.value || product?.id,
+            quantity: thisQuantity,
+            checked: true
+        }))
+        setLoadOrder(true);
+        navigate('/cart');
     }
 
     if (!product) {
@@ -121,8 +152,8 @@ function ProductShow({ }: Props) {
                             {
                                 product.variants && product.variants.map((variants, index) => (
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="radio" name="variant" id={variants.id+'variant'} value={variants.id} />
-                                        <label className="form-check-label" htmlFor={variants.id+'variant'}>{variants.variantName}</label>
+                                        <input className="form-check-input" type="radio" name="variant" id={variants.id + 'variant'} value={variants.id} />
+                                        <label className="form-check-label" htmlFor={variants.id + 'variant'}>{variants.variantName}</label>
                                     </div>
                                 ))
                             }
@@ -137,7 +168,7 @@ function ProductShow({ }: Props) {
                                     <button className="btn btn-secondary" onClick={increaseQuantity}>+</button>
                                 </div>
                                 <button className='btn btn-outline-dark btn-lg' onClick={addToCart} style={{ flex: 1 }}>Thêm vào giỏ hàng</button>
-                                <button className='btn btn-dark btn-lg' style={{ flex: 1 }}>Đặt hàng</button>
+                                <button onClick={orderThisProduct} className='btn btn-dark btn-lg' style={{ flex: 1 }}>Đặt hàng</button>
                             </div>
                         </div>
                     </div>

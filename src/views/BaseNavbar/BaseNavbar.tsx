@@ -47,7 +47,7 @@ function BaseNavbar({ }: Props) {
         </div>
       </div>
       <div className='userSpace'>
-        <Link to='/cart' className='itemLink fs-5 position-relative px-3 mr-3'>
+        <Link to='/cart' className='itemLink fs-5 position-relative px-3 mr-1'>
           <AiOutlineShoppingCart />
           <span style={{ fontSize: 8, top: 15, right: 0 }} className='position-absolute px-1 translate-middle badge rounded-pill bg-secondary'>
             {count}
@@ -55,16 +55,16 @@ function BaseNavbar({ }: Props) {
         </Link>
         {
           !account.accessToken ?
-            <Link to='login' className='itemLink fs-5 btn'>
-              <FaUserCircle className='icon' />
+            <Link to='login' className='itemLink'>
+              <FaUserCircle className='fs-5' />
             </Link> :
             (
               account.role === 'ROLE_ADMIN' ?
-                <Link to={'admin'} className='itemLink fs-5'>
+                <Link to={'admin'} className='itemLink'>
                   <small style={{ fontSize: 14 }} className='mx-2'>
                     {account.email}
                   </small>
-                  <FaUserCircle className='icon ml-1' />
+                  <FaUserCircle className='fs-5 ml-1' />
                 </Link> :
                 <UserDropDown />
             )

@@ -1,0 +1,16 @@
+.footer {
+    background: black;
+    border-top: 2px solid white;
+    color: white;
+    padding: 4em;
+    .firstCol {
+        font-size: 1.2em;
+    }
+    .secondCol {
+        opacity: 0.8;
+    }
+    .thirdCol {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

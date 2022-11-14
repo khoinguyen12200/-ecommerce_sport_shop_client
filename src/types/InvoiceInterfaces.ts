@@ -2,7 +2,7 @@ import ts from 'typescript';
 
 export enum PaymentMethodInterface {
     CASH = "cash",
-    VNPAY = "bank"
+    VNPAY = "vnpay"
 }
 
 export enum InvoiceStateInterface {
