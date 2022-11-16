@@ -8,3 +8,9 @@ export function getProductImagePath(image: string) {
 export function getProductGalleryPath(image: string) {
     return  PUBLIC_PATH+'uploads/product_gallery/'+image;
 }
+
+export function getLinkToPage(page: number) {
+    const urlParams = new URLSearchParams(window.location.search)
+    urlParams.set('page', page.toString());
+    return urlParams.toString();
+}

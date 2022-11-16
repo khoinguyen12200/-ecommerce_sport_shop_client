@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify'
-import { getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper'
+import { getLinkToPage, getProductGalleryPath, getProductImagePath } from '../../../helper/PathHelper'
 import { setProducts } from '../../../redux/adminDataSlice'
 import { Link, useSearchParams } from 'react-router-dom'
 import Wrapper from '../Wrapper'
@@ -52,11 +52,6 @@ function Product({ }: Props) {
         const res = await axios.get(ENDPOINT + '/products', { params });
         setProduct(res.data.data.products);
         setPages(res.data.data.pages);
-    }
-
-    function getLinkToPage(page: number) {
-        const urlParams = new URLSearchParams(window.location.search)
-        return urlParams.toString();
     }
 
     return (

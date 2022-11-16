@@ -254,6 +254,19 @@ const Sidebar = (props: any) => {
               icon='fa-solid fa-list text-info'
             />
 
+            <NavigateItem
+              to='/admin/user'
+              listActives={['/admin/user', '/admin/user/*', '/admin/user/add']}
+              name='Tài khoản'
+              icon='fa-solid fa-users text-dark'
+            />
+
+            <NavigateItem
+              to='/admin/invoice'
+              listActives={['/admin/invoice', '/admin/invoice/*']}
+              name='Đơn hàng'
+              icon='fa-solid fa-receipt text-success'
+            />
           </Nav>
         </Collapse>
       </Container>
@@ -285,7 +298,7 @@ function NavigateItem(props: any) {
 
     return isPathValid(to);
   }, [pathName]);
-  
+
 
 
 

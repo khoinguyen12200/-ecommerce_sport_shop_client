@@ -22,11 +22,13 @@ export interface InvoiceItemInterface {
     cost: number;
     product: ProductInterface;
     quantity: number;
+    productId?:string
 }
 
 export interface InvoiceInterface {
     id: string;
     name: string;
+    email: string;
     userId?: string;
     user?: UserInterface;
     address: string;
@@ -39,5 +41,15 @@ export interface InvoiceInterface {
     shippingFee: number;
     total: number;
     invoiceItems: InvoiceItemInterface[];
-    coupons: any[],
+    coupons: CouponInterface[],
+    createdAt: {
+        date: string;
+    };
+}
+
+export interface CouponInterface {
+    code: string;
+    discount: number;
+    id: string;
+    title: string;
 }

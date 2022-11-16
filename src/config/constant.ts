@@ -1,7 +1,13 @@
 import ts from 'typescript'
 
+export enum InvoiceState {
+    PENDING = 'pending',
+    SHIPPING = 'shipping',
+    CANCLED = 'cancled',
+    COMPLETED = 'completed'
+}
 
-export function mapInvoiceState (state: string) {
+export function mapInvoiceState (state?: string) {
     switch (state) {
         case 'pending':
             return 'Chờ xử lý'
@@ -16,7 +22,12 @@ export function mapInvoiceState (state: string) {
     }
 }
 
-export function mapPaymentState(state: string) {
+export enum PaymentState {
+    PENDING = 'pending',
+    COMPLETED = 'completed'
+}
+
+export function mapPaymentState(state?: string) {
     switch (state) {
         case 'pending':
             return 'Chưa thanh toán'
@@ -30,3 +41,12 @@ export function mapPaymentState(state: string) {
 export const DEFAULT_COUPONS = [
     'FREE_SHIPPING_1M'
 ];
+
+export const ROLES = {
+    ADMIN: 'ROLE_ADMIN',
+    USER: 'ROLE_USER'
+}
+
+export const formatVND = (number: number) => {
+    return number.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+}

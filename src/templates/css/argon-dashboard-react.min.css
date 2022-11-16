@@ -5588,6 +5588,9 @@ button.close {
 a.close.disabled {
   pointer-events: none;
 }
+
+/* KHOI DELETED */
+/* 
 .modal-open {
   overflow: hidden;
 }
@@ -5770,7 +5773,9 @@ a.close.disabled {
   .modal-xl {
     max-width: 1140px;
   }
-}
+} */
+
+
 .tooltip {
   position: absolute;
   z-index: 1070;

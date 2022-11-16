@@ -15,6 +15,12 @@ import Sidebar from '../../Components/Sidebar/Sidebar'
 import AdminNavbar from '../../Components/Navbars/AdminNavbar'
 import AdminFooter from '../../Components/Footers/AdminFooter'
 import { Container } from 'react-bootstrap'
+import User from './User/User'
+import UserDetail from './User/UserDetail'
+import AddUser from './User/AddUser'
+import Invoice from './Invoice/Invoice'
+import InvoiceDetail from './Invoice/InvoiceDetail'
+import UpdateInvoice from './Invoice/UpdateInvoice';
 
 
 type Props = {}
@@ -84,7 +90,12 @@ const Admin = (props: any) => {
           <Route path="product/add" element={<AddProduct/>} />
           <Route path="product/edit/:id" element={<EditProduct/>} />
           <Route path="category" element={<Category/>} />
-
+          <Route path="user" element={<User/>}/>
+          <Route path="user/:id" element={<UserDetail/>}/>
+          <Route path="user/add" element={<AddUser/>}/>
+          <Route path="invoice" element={<Invoice/>}/>
+          <Route path="invoice/:id" element={<InvoiceDetail/>}/>
+          <Route path="invoice/:id/update" element={<UpdateInvoice/>}/>
         </Routes>
         <Container fluid>
           <AdminFooter />
@@ -128,6 +139,7 @@ function Admin1({ }: Props) {
             <Route path='product/add' element={<AddProduct />} />
             <Route path='product/edit/:id' element={<EditProduct />} />
             <Route path='category' element={<Category />} />
+
           </Routes>
         </div>
       </div>

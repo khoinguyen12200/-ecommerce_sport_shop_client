@@ -110,16 +110,9 @@ function EditProduct({ }: Props) {
     }
     return (
         <BaseContent
+            backLink={product.parentId ? `/admin/product/edit/${product.parentId}` : '/admin/product'}
             title={product.parentId ? 'Sửa biến thể sản phẩm' : 'Sửa sản phẩm'}
-            rightContent={
-                product.parentId ?
-                    <Link to={`/admin/product/edit/${product.parentId}`} className="btn btn-outline-dark btn-sm">
-                        <FaArrowLeft></FaArrowLeft> Quay lại
-                    </Link> :
-                    <Link to={`/admin/product`} className="btn btn-outline-dark btn-sm">
-                        <FaArrowLeft></FaArrowLeft> Quay lại
-                    </Link>
-            }
+
         >
 
             <form onSubmit={handleSubmitForm} method="POST" className='EditProductForm'>
