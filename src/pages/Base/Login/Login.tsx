@@ -8,11 +8,26 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { updateToken } from '../../../redux/authSlice';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
+import {
+    Button,
+    Card,
+    CardHeader,
+    CardBody,
+    FormGroup,
+    Form,
+    Input,
+    InputGroupText,
+    InputGroup,
+    Row,
+    Col,
+    Label
+} from "reactstrap";
 
 type Props = {}
 
-function Login({ }: Props) {
+
+function Login() {
 
     const account = useAppSelector(state => state.account);
 
@@ -34,8 +49,7 @@ function Login({ }: Props) {
         }
     }, [loading, res])
 
-    async function submit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
+    async function submit() {
         toast.promise(
             sendForm(),
             {
@@ -53,7 +67,7 @@ function Login({ }: Props) {
         };
 
         const res = await axios.post(ENDPOINT + '/login_check', reqData)
-        
+
         const data = res.data;
         dispatch(updateToken({
             accessToken: data.token,
@@ -64,35 +78,80 @@ function Login({ }: Props) {
         }))
     }
 
+
+
     return (
         <div className='LoginPage'>
-            {
-                account.accessToken && (
-                    account.role === 'ROLE_ADMIN' ?
-                        <Navigate to='/admin' /> :
-                        <Navigate to='/user' />
-                )
-            }
-            <div className='loginContainer mt-5'>
-                <div className='loginForm'>
-                    <img src={ImageSporterus} className='logo mb-5 text-center' />
-                    <form className='form' onSubmit={submit}>
-                        <input type='text' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email' className='form-control rounded-pill fs-5 mb-3 px-3' />
-                        <input type='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Mật khẩu' className='form-control rounded-pill fs-5 mb-3 px-3' />
-                        <button className='btn btn-primary rounded-pill fs-5 w-100'>
-                            Đăng nhập
-                        </button>
-                        <div className='mt-5 text-center'>
-                            <a href='/register' className='btn btn-dark btn-sm mx-2 rounded-lg'>
-                                Đăng ký
-                            </a>
-                            <a className='btn btn-secondary btn-sm rounded-lg mx-2'>
-                                Quên mật khẩu
-                            </a>
+            <img src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/w_1344,c_limit/beba11dc-27f3-4fac-97cc-560674ebfe6f/nike-just-do-it.png"
+                alt="" className="bg" />
+            <Col lg="5" md="7">
+                <Card className="bg-secondary shadow border-0 loginForm">
+                    <CardBody className="px-lg-5 py-lg-5">
+                        <img src={ImageSporterus} className='logo mb-5 text-center' />
+                        <div className="text-center text-muted mb-4">
+                            <small>Đăng nhập với tài khoản</small>
                         </div>
-                    </form>
-                </div>
-            </div>
+                        <Form role="form">
+                            <FormGroup className="mb-3">
+                                <InputGroup className="input-group-alternative">
+                                    <Label addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="ni ni-email-83" />
+                                        </InputGroupText>
+                                    </Label>
+                                    <Input
+                                        placeholder="Email"
+                                        type="email"
+                                        autoComplete="new-email"
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup className="input-group-alternative">
+                                    <Label addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="ni ni-lock-circle-open" />
+                                        </InputGroupText>
+                                    </Label>
+                                    <Input
+                                        placeholder="Password"
+                                        type="password"
+                                        autoComplete="new-password"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+
+                            <div className="text-center">
+                                <Button onClick={submit} className="my-4" color="primary" type="button">
+                                    Đăng nhập
+                                </Button>
+                            </div>
+                        </Form>
+                    </CardBody>
+                </Card>
+                <Row className="mt-3">
+                    <Col xs="6">
+                        <a
+                            className="btn btn-light btn-sm"
+                            href="#pablo"
+                            onClick={(e) => e.preventDefault()}
+                        >
+                            <small>Forgot password?</small>
+                        </a>
+                    </Col>
+                    <Col className="text-right" xs="6">
+                        <Link to='/register'
+                            className="btn btn-warning btn-sm"
+                        >
+                            <small>Tạo tài khoản mới</small>
+                        </Link>
+                    </Col>
+                </Row>
+            </Col>
         </div>
     )
 }

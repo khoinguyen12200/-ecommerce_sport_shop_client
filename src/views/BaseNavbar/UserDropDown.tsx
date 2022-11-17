@@ -37,17 +37,17 @@ function UserDropDown({ }: Props) {
     }
 
     return (
-        <div className='userDropDown btn'>
-            <FaUserCircle onClick={toggleShow} className='icon ml-1' />
-            <div className="dropDownMenu shadow" data-show={show && 'true'}>
+        <Link to="/user" className='userDropDown itemLink'>
+            <FaUserCircle onClick={toggleShow} className='fs-5' />
+            {/* <div className="dropDownMenu shadow" data-show={show && 'true'}>
                 <Link to='/user' className="dropDownItem">
                     <HiInformationCircle className='me-1 mb-1'/> Thông tin
                 </Link>
                 <div onClick={handleLogout} className="dropDownItem text-danger">
                     <ImExit className='me-1 mb-1'/> Đăng xuất
                 </div>
-            </div>
-        </div>
+            </div> */}
+        </Link>
     )
 }
 

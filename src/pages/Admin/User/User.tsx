@@ -74,7 +74,7 @@ function User({ }: Props) {
                 <tbody>
                     {users.map((user: UserInterface, index: number) => (
                         <tr key={index}>
-                            <td>{index + 1}</td>
+                            <td>{user.id}</td>
                             <td>{user.role}</td>
                             <td>{user.name}</td>
                             <td>

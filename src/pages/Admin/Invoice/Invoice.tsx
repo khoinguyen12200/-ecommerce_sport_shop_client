@@ -31,6 +31,9 @@ function Invoice({ }: Props) {
     return (
         <BaseContent
             title="Đơn hàng"
+            rightContent={
+                <Link to="/admin/invoice/create" className="btn btn-primary">Thêm đơn hàng</Link>
+            }
         >
             <Table striped bordered hover>
                 <thead>

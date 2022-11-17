@@ -27,8 +27,6 @@ function InvoiceDetail({ }: Props) {
         setInvoice(res.data.data);
     }
 
-    console.log('123123123',mapInvoiceState(invoice?.state))
-
     return (
         <BaseContent
             backLink="/admin/invoice"
@@ -40,12 +38,14 @@ function InvoiceDetail({ }: Props) {
             <div className="row mb-5">
                 <div className="col-6">
                     <h5>Thông tin khách hàng</h5>
+                    <p>UserId: {invoice?.userId}</p>
                     <p>Tên: {invoice?.name}</p>
                     <p>Địa chỉ: {invoice?.address}</p>
                     <p>Số điện thoại: {invoice?.phone}</p>
                 </div>
                 <div className="col-6">
                     <h5>Thông tin đơn hàng</h5>
+                    <p>ID Đơn hàng: {invoice?.id}</p>
                     <p>Ngày đặt hàng: {new Date(invoice?.createdAt.date || '').toLocaleDateString()}</p>
                     <p>Trạng thái: {mapInvoiceState(invoice?.state)}</p>
                 </div>

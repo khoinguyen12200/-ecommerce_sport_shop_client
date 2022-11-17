@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useRef } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ENDPOINT } from '../../../config/config';
 import { InvoiceState, mapInvoiceState, PaymentState, mapPaymentState, formatVND } from '../../../config/constant';
 import { setLoading } from '../../../redux/loadingSlice';
@@ -13,6 +13,7 @@ import { v4 } from 'uuid';
 import { getPaymentMethod, getProductName } from '../../../helper/ProductHelper';
 import index from '../../index';
 import { AiOutlineConsoleSql } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 
 type Props = {}
 
@@ -22,23 +23,11 @@ interface InvoiceItemProps {
 }
 
 function UpdateInvoice({ }: Props) {
-    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const [invoice, setInvoice] = React.useState<InvoiceInterface>();
+    // const [invoice, setInvoice] = React.useState<InvoiceInterface>();
     const [invoiceItems, setInvoiceItems] = React.useState<InvoiceItemProps[]>([]);
     const [coupons, setCoupons] = React.useState<string[]>([]);
-
-    React.useEffect(() => {
-        fetchInvoice();
-    }, [id])
-
-    async function fetchInvoice() {
-        dispatch(setLoading(true))
-        const res = await axios.get(ENDPOINT + '/admin/invoice/' + id).finally(() => {
-            dispatch(setLoading(false))
-        })
-        setInvoice(res.data.data);
-    }
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -47,47 +36,60 @@ function UpdateInvoice({ }: Props) {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
+        toast.promise(
+            handleAddInvoiceItem(data),
+            {
+                pending: 'Đang thêm đơn hàng',
+                success: 'Thêm đơn hàng thành công',
+                error: 'Thêm đơn hàng thất bại'
+            }
+        )
+    }
 
+    async function handleAddInvoiceItem(data: any) {
         dispatch(setLoading(true))
-        const res = await axios.put(ENDPOINT + '/admin/invoice/' + id, {
-            ...invoice,
+        const res = await axios.post(ENDPOINT + '/admin/invoice', {
             ...data,
             couponCode: coupons,
             items: invoiceItems
         }).finally(() => {
             dispatch(setLoading(false))
+            navigate('/admin/invoice')
         })
-        setInvoice(res.data.data);
     }
 
     return (
         <BaseContent
-            title="Cập nhật hóa đơn"
-            backLink={`/admin/invoice/${id}`}
+            title="Thêm đơn hàng"
+            backLink={`/admin/invoice`}
         >
             <form onSubmit={onSubmit}>
                 <div className="row">
                     <div className="col-6">
                         <h5>Thông tin khách hàng</h5>
                         <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="email" placeholder="email" defaultValue={invoice?.email} name="email" />
+                            <input type="text" className="form-control" id="email" placeholder="email" name="email" required/>
                             <label htmlFor="email">Email</label>
                         </div>
                         <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="userId" placeholder="userId" defaultValue={invoice?.userId} name="userId" />
+                            <input type="text" className="form-control" id="userId" placeholder="userId" name="userId" />
                             <label htmlFor="userId">User id</label>
                         </div>
 
                         <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="name" placeholder="name" defaultValue={invoice?.name} name="name" />
+                            <input type="text" className="form-control" id="name" placeholder="name" name="name" required />
                             <label htmlFor="name">Tên khách hàng</label>
                         </div>
                         <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="address" placeholder="address" defaultValue={invoice?.address} name="address" />
+                            <input type="text" className="form-control" id="address" placeholder="address"  name="address" required/>
                             <label htmlFor="address">Địa chỉ</label>
                         </div>
                         <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="phone" placeholder="phone" defaultValue={invoice?.phone} name="phone" />
+                            <input type="text" className="form-control" id="city" placeholder="city"  name="city" required/>
+                            <label htmlFor="city">Thành phố</label>
+                        </div>
+                        <div className="form-floating mb-3">
+                            <input type="text" className="form-control" id="phone" placeholder="phone" name="phone" required/>
                             <label htmlFor="phone">Số điện thoại</label>
                         </div>
 
@@ -95,7 +97,7 @@ function UpdateInvoice({ }: Props) {
                     <div className="col-6">
                         <h5>Thông tin đơn hàng</h5>
                         <div className="form-floating mb-3">
-                            <select className="form-select" id="state" name="state" defaultValue={invoice?.state}>
+                            <select className="form-select" id="state" name="state">
                                 {
                                     //map invoice state
                                     Object.keys(InvoiceState).map((key, index) => {
@@ -112,7 +114,7 @@ function UpdateInvoice({ }: Props) {
                             <label htmlFor="state">Trạng thái</label>
                         </div>
                         <div className="form-floating mb-3">
-                            <select className="form-select" id="paymentMethod" name="paymentMethod" value={invoice?.paymentMethod}>
+                            <select className="form-select" id="paymentMethod" name="paymentMethod">
                                 {
                                     //map invoice state
                                     Object.keys(PaymentMethodInterface).map((key, index) => {
@@ -130,7 +132,7 @@ function UpdateInvoice({ }: Props) {
                         </div>
 
                         <div className="form-floating mb-3">
-                            <select className="form-select" id="paymentState" name='paymentState' value={invoice?.paymentState}>
+                            <select className="form-select" id="paymentState" name='paymentState'>
                                 {
                                     //map invoice state
                                     Object.keys(PaymentState).map((key, index) => {
@@ -151,12 +153,12 @@ function UpdateInvoice({ }: Props) {
 
                 <hr />
 
-                <InvoiceItems invoice={invoice} updateItems={setInvoiceItems} />
+                <InvoiceItems updateItems={setInvoiceItems} />
 
-                <CouponsHandler invoice={invoice} updateCoupons={setCoupons} />
+                <CouponsHandler updateCoupons={setCoupons} />
 
                 <button className="btn btn-primary d-block w-100 mt-5">
-                    Cập nhật
+                    Xác nhận
                 </button>
             </form>
 
@@ -165,18 +167,11 @@ function UpdateInvoice({ }: Props) {
     )
 }
 
-function CouponsHandler({ invoice, updateCoupons }: { invoice?: InvoiceInterface, updateCoupons: (coupons: string[]) => void }) {
-    const alreadyAddedCoupons = invoice?.coupons || [];
+function CouponsHandler({  updateCoupons }: { updateCoupons: (coupons: string[]) => void }) {
 
     const [coupons, setCoupons] = React.useState<CouponInterface[]>([]);
 
     const [addedCoupons, setAddedCoupons] = React.useState<string[]>([]);
-
-    useEffect(() => {
-        alreadyAddedCoupons.forEach(coupon => {
-            handleAddCoupon(coupon.code);
-        })
-    }, [alreadyAddedCoupons])
 
     function handleAddCoupon(code: string) {
         if (code && addedCoupons.includes(code)) {
@@ -233,15 +228,8 @@ function CouponsHandler({ invoice, updateCoupons }: { invoice?: InvoiceInterface
     )
 }
 
-function InvoiceItems({ invoice, updateItems }: { invoice?: InvoiceInterface, updateItems: (items: InvoiceItemProps[]) => void }) {
-
-    const invoiceItems = invoice?.invoiceItems || [];
-
-    const [items, setItems] = React.useState<InvoiceItemInterface[]>(invoiceItems || []);
-
-    useEffect(() => {
-        setItems(invoiceItems);
-    }, [invoiceItems])
+function InvoiceItems({ updateItems }: { updateItems: (items: InvoiceItemProps[]) => void }) {
+    const [items, setItems] = React.useState<InvoiceItemInterface[]>([]);
 
 
     function handleDelete(index: number) {

@@ -47,7 +47,7 @@ function BaseNavbar({ }: Props) {
         </div>
       </div>
       <div className='userSpace'>
-        <Link to='/cart' className='itemLink fs-5 position-relative px-3 mr-1'>
+        <Link to='/cart' className='itemLink fs-5 position-relative px-3'>
           <AiOutlineShoppingCart />
           <span style={{ fontSize: 8, top: 15, right: 0 }} className='position-absolute px-1 translate-middle badge rounded-pill bg-secondary'>
             {count}

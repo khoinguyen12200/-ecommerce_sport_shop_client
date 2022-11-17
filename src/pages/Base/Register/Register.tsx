@@ -4,7 +4,20 @@ import ImageSporterus from "../../../assets/icons/sporterus-high-resolution-logo
 import axios, { AxiosError } from 'axios';
 import { ENDPOINT } from '../../../config/config';
 import { toast } from 'react-toastify';
-
+import {
+    Button,
+    Card,
+    CardHeader,
+    CardBody,
+    FormGroup,
+    Form,
+    Input,
+    InputGroupText,
+    InputGroup,
+    Row,
+    Col,
+    Label
+} from "reactstrap";
 
 type Props = {}
 
@@ -16,10 +29,8 @@ function Register({ }: Props) {
     const [password, setPassword] = React.useState('');
     const [password2, setPassword2] = React.useState('');
 
-    async function submit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-    
-        if(!validateEmail(email)) {
+    async function submit() {
+        if (!validateEmail(email)) {
             alert('Email không hợp lệ');
             return;
         }
@@ -36,8 +47,8 @@ function Register({ }: Props) {
                 error: 'Đăng ký thất bại'
             }
         )
-        
-    
+
+
     }
 
     async function sendRegister() {
@@ -62,20 +73,77 @@ function Register({ }: Props) {
 
 
     return (
-        <div className='RegisterPage'>
-            <div className='registerContainer mt-5'>
-                <div className='registerForm'>
-                    <img src={ImageSporterus} className='logo mb-5 text-center' />
-                    <form method="post" className='form' onSubmit={submit}>
-                        <input type='email' value={email} onChange={e => setEmail(e.target.value)} placeholder='Email' className='form-control rounded-pill fs-5 mb-3 px-3' />
-                        <input type='password' value={password} onChange={e => setPassword(e.target.value)} placeholder='Mật khẩu' className='form-control rounded-pill fs-5 mb-3 px-3' />
-                        <input type='password' value={password2} onChange={e => setPassword2(e.target.value)} placeholder='Nhập lại mật khẩu' className='form-control rounded-pill fs-5 mb-3 px-3' />
-                        <div className='text-center'>
-                        <button type='submit' className='btn btn-dark rounded m-auto fs-5 px-5 mt-3'>Đăng ký</button>
+        <div className='LoginPage'>
+            <img src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/w_1344,c_limit/beba11dc-27f3-4fac-97cc-560674ebfe6f/nike-just-do-it.png"
+                alt="" className="bg" />
+            <Col lg="5" md="7">
+                <Card className="bg-secondary shadow border-0 loginForm">
+                    <CardBody className="px-lg-5 py-lg-5">
+                        <img src={ImageSporterus} className='logo mb-5 text-center' />
+                        <div className="text-center text-muted mb-4">
+                            <small>Tạo tài khoản</small>
                         </div>
-                    </form>
-                </div>
-            </div>
+                        <Form role="form">
+                            <FormGroup className="mb-3">
+                                <InputGroup className="input-group-alternative">
+                                    <Label addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="ni ni-email-83" />
+                                        </InputGroupText>
+                                    </Label>
+                                    <Input
+                                        placeholder="Email"
+                                        type="email"
+                                        autoComplete="new-email"
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup className="input-group-alternative">
+                                    <Label addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="ni ni-lock-circle-open" />
+                                        </InputGroupText>
+                                    </Label>
+                                    <Input
+                                        placeholder="Password"
+                                        type="password"
+                                        autoComplete="new-password"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+
+                            <FormGroup>
+                                <InputGroup className="input-group-alternative">
+                                    <Label addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="ni ni-lock-circle-open" />
+                                        </InputGroupText>
+                                    </Label>
+                                    <Input
+                                        placeholder="Password"
+                                        type="password"
+                                        autoComplete="new-password"
+                                        value={password2}
+                                        onChange={e => setPassword2(e.target.value)}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+
+
+                            <div className="text-center">
+                                <Button onClick={submit} className="my-4" color="primary" type="button">
+                                    Đăng ký
+                                </Button>
+                            </div>
+                        </Form>
+                    </CardBody>
+                </Card>
+            </Col>
         </div>
     )
 }

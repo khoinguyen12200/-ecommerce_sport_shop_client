@@ -21,6 +21,7 @@ import AddUser from './User/AddUser'
 import Invoice from './Invoice/Invoice'
 import InvoiceDetail from './Invoice/InvoiceDetail'
 import UpdateInvoice from './Invoice/UpdateInvoice';
+import AddInvoice from './Invoice/AddInvoice';
 
 
 type Props = {}
@@ -96,6 +97,7 @@ const Admin = (props: any) => {
           <Route path="invoice" element={<Invoice/>}/>
           <Route path="invoice/:id" element={<InvoiceDetail/>}/>
           <Route path="invoice/:id/update" element={<UpdateInvoice/>}/>
+          <Route path="invoice/create" element={<AddInvoice/>}/>
         </Routes>
         <Container fluid>
           <AdminFooter />

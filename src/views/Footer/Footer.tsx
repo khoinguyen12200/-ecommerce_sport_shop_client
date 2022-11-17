@@ -6,7 +6,7 @@ type Props = {}
 
 function Footer({ }: Props) {
     return (
-        <footer className='row footer'>
+        <footer className='row myFooter'>
             <div className="col-3 firstCol">
                 <div className="fw-semibold mb-3">
                     Về chúng tôi
