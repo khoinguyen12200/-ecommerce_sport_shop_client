@@ -11,6 +11,8 @@ import './User.scss';
 import AdminNavbar from '../../Components/Navbars/AdminNavbar'
 import { Container } from 'reactstrap'
 import UserNavbar from '../../views/UserNavbar/UserNavbar'
+import Invoices from './Invoices/Invoices'
+import InvoiceDetail from './Invoices/InvoiceDetail'
 type Props = {}
 
 function User({ }: Props) {
@@ -39,6 +41,8 @@ function User({ }: Props) {
                 <UserNavbar/>
                 <Routes>
                     <Route path="" element={<Information />} />
+                    <Route path="invoices" element={<Invoices />} />
+                    <Route path="invoices/:id/:hash" element={<InvoiceDetail />} />
                     {/* <Route path="" element={<Dashboard />} />
                     <Route path="product" element={<Product />} />
                     <Route path="product/add" element={<AddProduct />} />

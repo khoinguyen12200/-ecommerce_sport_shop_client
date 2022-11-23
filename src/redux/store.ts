@@ -4,6 +4,7 @@ import authReducer from "./authSlice";
 import adminDataReducer from "./adminDataSlice";
 import cartReducer from "./cartSlice";
 import loadingReducer from "./loadingSlice";
+import publicDataReducer from "./publicDataSlice";
 
 const loadState = () => {
   try {
@@ -32,6 +33,7 @@ export const store = configureStore({
     admin: adminDataReducer,
     cart: cartReducer,
     loading: loadingReducer,
+    publicData: publicDataReducer,
   },
   preloadedState: loadState(),
   devTools: true,

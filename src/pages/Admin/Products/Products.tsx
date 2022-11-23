@@ -24,6 +24,8 @@ function Product({ }: Props) {
         root: true,
         limit: 10,
         page: 1,
+        sortBy: 'id',
+        order: 'DESC'
     };
 
     const [products, setProduct] = useState<ProductInterface[]>([])
@@ -35,7 +37,7 @@ function Product({ }: Props) {
 
     async function fetchProducts() {
         dispatch(setLoading(true));
-        
+
         await fetchProductAction();
 
         dispatch(setLoading(false));
@@ -55,69 +57,70 @@ function Product({ }: Props) {
     }
 
     return (
-            <BaseContent
-                title='Danh sách sản phẩm'
-                rightContent = {
-                    <Link to='/admin/product/add' className='btn btn-primary'>Thêm sản phẩm</Link>
-                }
-            >
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Giá</th>
-                            <th>Ảnh</th>
-                            <th className='text-center'>Thao tác</th>
+        <BaseContent
+            title='Danh sách sản phẩm'
+            rightContent={
+                <Link to='/admin/product/add' className='btn btn-primary'>Thêm sản phẩm</Link>
+            }
+        >
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Ảnh</th>
+                        <th className='text-center'>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {products.map((product: ProductInterface, index: number) => (
+                        <tr key={index}>
+                            <td>{product.id}</td>
+                            <td>
+                                <div>
+                                    {product.name}
+                                </div>
+                                {
+                                    product.variants && (
+                                        <div className="d-flex flex-wrap gap-2 mt-2">
+                                            {product.variants.map((variant: ProductInterface, index: number) => (
+                                                <Link to={`/admin/product/edit/${variant.id}`} className="btn btn-sm btn-outline-dark">
+                                                    {variant.variantName}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )
+                                }
+                            </td>
+                            <td>
+                                {product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                            </td>
+                            <td>
+                                <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductImagePath(product.image)} />
+                            </td>
+                            <td className='text-center'>
+                                <Link to={`/admin/product/edit/${product.id}`} className="btn btn-sm btn-primary me-1">Sửa</Link>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((product: ProductInterface, index: number) => (
-                            <tr key={index}>
-                                <td>{product.id}</td>
-                                <td>
-                                    <div>
-                                        {product.name}
-                                    </div>
-                                    {
-                                        product.variants && (
-                                            <div className="d-flex flex-wrap gap-2 mt-2">
-                                                {product.variants.map((variant: ProductInterface, index: number) => (
-                                                    <Link to={`/admin/product/edit/${variant.id}`} className="btn btn-sm btn-outline-dark">
-                                                        {variant.variantName}
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        )
-                                    }
-                                </td>
-                                <td>{product.price}</td>
-                                <td>
-                                    <Image thumbnail style={{ maxWidth: 100, maxHeight: 100 }} src={getProductImagePath(product.image)} />
-                                </td>
-
-                                <td className='text-center'>
-                                    <Link to={`/admin/product/edit/${product.id}`} className="btn btn-sm btn-primary me-1">Sửa</Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                    ))}
+                </tbody>
+            </Table>
 
 
 
-                <nav>
-                    <ul className="pagination justify-content-center mt-3">
-                        {
-                            Array.from(Array(pages).keys()).map((page: number) => (
-                                <li className="page-item">
-                                    <Link className="page-link" to={`/admin/product?${getLinkToPage(page + 1)}`}>{page + 1}</Link>
-                                </li>
-                            ))
-                        }
-                    </ul>
-                </nav>
-            </BaseContent>
+            <nav>
+                <ul className="pagination justify-content-center mt-3">
+                    {
+                        Array.from(Array(pages).keys()).map((page: number) => (
+                            <li className="page-item">
+                                <Link className="page-link" to={`/admin/product?${getLinkToPage(page + 1)}`}>{page + 1}</Link>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </nav>
+        </BaseContent>
     )
 }
 

@@ -49,7 +49,7 @@ function BaseNavbar({ }: Props) {
       <div className='userSpace'>
         <Link to='/cart' className='itemLink fs-5 position-relative px-3'>
           <AiOutlineShoppingCart />
-          <span style={{ fontSize: 8, top: 15, right: 0 }} className='position-absolute px-1 translate-middle badge rounded-pill bg-secondary'>
+          <span style={{ fontSize: 8, lineHeight: 1, top: 0, right: 0 }} className='position-absolute d-flex justify-content-center align-items-center badge rounded-pill text-bg-secondary'>
             {count}
           </span>
         </Link>
@@ -140,6 +140,14 @@ function QuanAo() {
             Áo khoác
           </Link>
         </h6>
+      </div>
+
+      {/* <h5>
+        <Link to='/products?category=quan' className='simpleLink'>
+          Quần
+        </Link>
+      </h5> */}
+      <div>
         <h6>
           <Link to='/products?category=quan-short' className='simpleLink text-muted'>
             Quần short
@@ -151,6 +159,9 @@ function QuanAo() {
           </Link>
         </h6>
       </div>
+
+
+
     </div>
   )
 }

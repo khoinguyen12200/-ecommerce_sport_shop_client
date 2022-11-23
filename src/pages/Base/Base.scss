@@ -1,6 +1,6 @@
 .orderBreadcrumb {
     border-bottom: 1px solid grey;
-    background: white;
+
     .link {
         color: black;
         padding: 1em;
@@ -26,4 +26,8 @@
 
 .contentOrderProcess {
     min-height: calc(100vh - 65px - 62px);
+}
+
+.BaseContainer {
+    background:white;
 }

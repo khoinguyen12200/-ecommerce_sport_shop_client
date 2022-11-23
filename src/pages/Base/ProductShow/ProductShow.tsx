@@ -11,12 +11,14 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { toast } from 'react-toastify';
 import { addCartProduct, setCartProductChecked } from '../../../redux/cartSlice';
 import { useEffect } from 'react';
+import { setLoading } from '../../../redux/loadingSlice';
 
 
 type Props = {}
 
 function ProductShow({ }: Props) {
 
+    const dispatch = useAppDispatch();
     const cartProducts = useAppSelector(state => state.cart.products) || [];
 
     let params = useParams();
@@ -38,14 +40,15 @@ function ProductShow({ }: Props) {
         setQuantity(quantity + 1);
     }
 
-    const dispatch = useAppDispatch();
-
 
     React.useEffect(() => {
         fetchProduct();
     }, [productId]);
     async function fetchProduct() {
-        const res = await axios.get(ENDPOINT + '/product/' + productId);
+        dispatch(setLoading(true))
+        const res = await axios.get(ENDPOINT + '/product/' + productId).finally(() => {
+            dispatch(setLoading(false))
+        });
         setProduct(res.data.data);
     }
 
@@ -93,28 +96,26 @@ function ProductShow({ }: Props) {
         navigate('/cart');
     }
 
-    if (!product) {
-        return <div>Loading...</div>
-    }
+    
     return (
         <div className='ProductShow'>
             <div className="headSpace">
                 <div className='imageSpaces'>
                     <div className="listDescImage">
                         {
-                            product.productGalleries.map((image, index) => (
+                            product?.productGalleries.map((image, index) => (
                                 <img onClick={() => setMainImage(getProductGalleryPath(image.path))} className='img' src={getProductGalleryPath(image.path)} />
                             ))
                         }
                     </div>
-                    <img className='mainImage' src={mainImage ? mainImage : getProductImagePath(product.image)} />
+                    <img className='mainImage' src={mainImage ? mainImage : getProductImagePath(product?.image || '')} />
                 </div>
                 <div className='info'>
                     <div>
-                        <div className='name'>{product.name}</div>
+                        <div className='name'>{product?.name}</div>
                         <div className='price'>
                             {
-                                product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+                                product?.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
                             }
                         </div>
                     </div>
@@ -150,7 +151,7 @@ function ProductShow({ }: Props) {
                     <div>
                         <div className="sizes d-flex justify-content-end flex-wrap gap-1 mb-3">
                             {
-                                product.variants && product.variants.map((variants, index) => (
+                                product?.variants && product.variants.map((variants, index) => (
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" name="variant" id={variants.id + 'variant'} value={variants.id} />
                                         <label className="form-check-label" htmlFor={variants.id + 'variant'}>{variants.variantName}</label>
@@ -160,12 +161,12 @@ function ProductShow({ }: Props) {
                         </div>
                         <div className='orderSpaces d-flex justify-content-end '>
                             <div className='order input-group'>
-                                <div className="btn btn-secondary">
-                                    <button className="btn btn-secondary" onClick={decreaseQuantity}>-</button>
+                                <div className="btn btn-light">
+                                    <button className="btn" onClick={decreaseQuantity}>-</button>
                                     <span className='mx-2'>
                                         {quantity}
                                     </span>
-                                    <button className="btn btn-secondary" onClick={increaseQuantity}>+</button>
+                                    <button className="btn" onClick={increaseQuantity}>+</button>
                                 </div>
                                 <button className='btn btn-outline-dark btn-lg' onClick={addToCart} style={{ flex: 1 }}>Thêm vào giỏ hàng</button>
                                 <button onClick={orderThisProduct} className='btn btn-dark btn-lg' style={{ flex: 1 }}>Đặt hàng</button>
@@ -176,7 +177,7 @@ function ProductShow({ }: Props) {
             </div>
             <div className='description'>
                 <div className='title'>Mô tả sản phẩm</div>
-                <div className='content' dangerouslySetInnerHTML={{ __html: product.description }}></div>
+                <div className='content' dangerouslySetInnerHTML={{ __html: product?.description || '' }}></div>
 
             </div>
         </div>

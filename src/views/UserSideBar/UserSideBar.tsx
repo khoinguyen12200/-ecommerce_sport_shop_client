@@ -234,34 +234,12 @@ const Sidebar = (props: any) => {
               name='Thông tin cá nhân'
               icon='fa-solid fa-user text-primary'
             />
-
-            {/* <NavigateItem
-              to='/admin/product'
-              listActives={['/admin/product', '/admin/product/add', '/admin/product/edit/*']}
-              name='Sản phẩm'
-              icon='fa-solid fa-shirt text-warning'
-            />
-
             <NavigateItem
-              to='/admin/category'
-              listActives={['/admin/category', '/admin/category/add', '/admin/category/edit/*']}
-              name='Danh mục'
-              icon='fa-solid fa-list text-info'
+              to='/user/invoices'
+              name='Hoá đơn'
+              icon='fa-solid fa-file-invoice text-info'
+              listActives={['/user/invoices/*', '/user/invoices']}
             />
-
-            <NavigateItem
-              to='/admin/user'
-              listActives={['/admin/user', '/admin/user/*', '/admin/user/add']}
-              name='Tài khoản'
-              icon='fa-solid fa-users text-dark'
-            />
-
-            <NavigateItem
-              to='/admin/invoice'
-              listActives={['/admin/invoice', '/admin/invoice/*']}
-              name='Đơn hàng'
-              icon='fa-solid fa-receipt text-success'
-            /> */}
           </Nav>
         </Collapse>
       </Container>

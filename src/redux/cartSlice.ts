@@ -51,7 +51,7 @@ export const addCartProduct = createAsyncThunk(
         let arr = state.cart.products || [];
         if (state.account.accessToken) {
             const response = await axios.post(`${ENDPOINT}/user/cart/add`, payload);
-            arr = mapCartToProductCartInterface(response.data.data)
+            arr = [...response.data?.data];
         } else {
             const res = await axios.get(`${ENDPOINT}/product/${payload.productId}`);
             const currentQuantity = arr.find((item: ProductCartInterface) => item.productId === payload.productId)?.quantity || 0;
@@ -83,6 +83,8 @@ export const addCartProduct = createAsyncThunk(
                 const item = arr[i];
                 newArr.push({ ...item, checked: item.productId == payload.productId });
             }
+        } else {
+            newArr.push(...arr);
         }
 
         return newArr;

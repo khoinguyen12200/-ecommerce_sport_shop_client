@@ -14,6 +14,7 @@ import OrderBreadcrumb from './OrderBreadcrumb';
 import './Base.scss'
 import Payment from './Payment/Payment';
 import MyInvoice from './MyInvoice/MyInvoice';
+import Footer from '../../views/Footer/Footer';
 
 
 type Props = {}
@@ -41,6 +42,8 @@ function Base({ }: Props) {
         <Route path='/payment' element={<Payment/>} />
         <Route path='/my_invoice' element={<MyInvoice/>} />
       </Routes>
+
+      <Footer/>
     </div>
   )
 }

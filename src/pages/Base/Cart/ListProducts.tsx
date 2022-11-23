@@ -110,7 +110,7 @@ function ProductItem({ product }: { product: ProductCartInterface }) {
                     product.checked ? (
                         <BsCheckCircle className='checked text-success' />
                     ) : (
-                        <BsArrowRightCircle className='unchecked text-secondary' />
+                        <BsArrowRightCircle className='unchecked text-success' />
                     )
                 }
             </div>

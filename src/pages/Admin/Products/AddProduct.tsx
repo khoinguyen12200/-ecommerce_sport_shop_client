@@ -64,7 +64,7 @@ function AddProduct({ }: Props) {
     async function sendForm(data: any) {
         let res = await axios.post(ENDPOINT + '/admin/product', data)
 
-        navigate('/admin/products')
+        navigate('/admin/product')
     }
 
     return (

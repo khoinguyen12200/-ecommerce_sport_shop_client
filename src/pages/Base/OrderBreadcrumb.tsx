@@ -11,17 +11,17 @@ function OrderBreadcrumb({}: Props) {
     <div className='d-flex orderBreadcrumb'>
         <Link className={`link ${path==='/cart' && 'active'}`} to='/cart'>
             <div className='d-flex align-items-center justify-content-center'>
-                Giỏ hàng
+                1. Giỏ hàng
             </div>
         </Link>
         <Link className={`link ${path==='/make_order' && 'active'}`} to='/make_order'>
             <div className='d-flex align-items-center justify-content-center'>
-                Thông tin đặt hàng
+                2. Thông tin đặt hàng
             </div>
         </Link>
         <Link className={`link ${path==='/payment' && 'active'}`} to='/payment'>
             <div className='d-flex align-items-center justify-content-center'>
-                Thanh toán
+                3. Thanh toán
             </div>
         </Link>
     </div>

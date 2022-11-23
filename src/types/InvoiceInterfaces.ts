@@ -27,6 +27,7 @@ export interface InvoiceItemInterface {
 
 export interface InvoiceInterface {
     id: string;
+    hash: string;
     name: string;
     email: string;
     userId?: string;
