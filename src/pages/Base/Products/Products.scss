@@ -31,8 +31,15 @@
             text-decoration: none;
             color:black;
             border-radius: 5px;
+            overflow: hidden;
             &:hover {
-
+                .info {
+                    transition: all 0.5s ease-out;
+                    transform: translateY(calc(-100% - 25px)) scale(0.9);
+                    outline: 18px solid rgba(0, 0, 0, 0.806);
+                    background-color: rgba(0, 0, 0, 0.8);
+                    color:white;
+                }
                 .galleries {
                     opacity: 1;
                     visibility: visible;
@@ -74,9 +81,17 @@
                 margin-bottom: 1em;
             }
             .info {
+                outline: 18px solid rgba(0, 0, 0, 0);
+                transition: all 0.5s ease-out;
                 .name {
                     text-transform: uppercase;
                     margin-bottom: 0.25em;
+                    //max rows 2
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+
                 }
                 .price {
                     text-transform: uppercase;

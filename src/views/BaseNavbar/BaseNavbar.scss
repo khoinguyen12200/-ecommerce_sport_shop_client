@@ -1,4 +1,4 @@
-@import '../../library';
+@import "../../library";
 
 .BaseNavbar {
     position: sticky;
@@ -35,13 +35,11 @@
         display: inline-block;
     }
 
-
     .navigateSpace {
         flex: 1;
         display: flex;
 
         .logoContainer {
-
             .logo img {
                 padding: 20px;
                 height: 65px;
@@ -62,40 +60,40 @@
                 position: relative;
                 cursor: default;
 
-                &::after {
-                    opacity: 0;
-                    transition: all 0.5s;
-                    content: '';
-                    position: absolute;
-                    bottom:0;
-                    right: 0;
-                    z-index: 150;
-                    transform-origin: left bottom;
-                    width: 50%;
-                    height: 2px;
-                    background: black;
-                    width: calc(50%);
-                }
+                // &::after {
+                //     opacity: 0;
+                //     transition: all 0.5s;
+                //     content: '';
+                //     position: absolute;
+                //     bottom:0;
+                //     right: 0;
+                //     z-index: 150;
+                //     transform-origin: left bottom;
+                //     width: 50%;
+                //     height: 2px;
+                //     background: black;
+                //     width: calc(50%);
+                // }
 
-                &::before {
-                    opacity: 0;
-                    transition: all 0.5s;
-                    content: '';
-                    position: absolute;
-                    bottom:0;
-                    left: 0;
-                    z-index: 150;
-                    transform-origin: right bottom;
-                    width: calc(50% - 1px);
-                    height: 2px;
-                    background: black;
-                }
+                // &::before {
+                //     opacity: 0;
+                //     transition: all 0.5s;
+                //     content: '';
+                //     position: absolute;
+                //     bottom:0;
+                //     left: 0;
+                //     z-index: 150;
+                //     transform-origin: right bottom;
+                //     width: calc(50% - 1px);
+                //     height: 2px;
+                //     background: black;
+                // }
 
                 .dropDownContent {
                     transition: all 0.25s;
                     pointer-events: none;
                     position: fixed;
-                    top: 65px;
+                    top: 0px;
                     left: 0;
                     width: 100vw;
                     background: white;
@@ -108,17 +106,9 @@
                 }
 
                 &:hover {
-                    &::after {
-                        opacity: 1;
-                        transform: translateY(20px) rotateZ(-20deg);
-                    }
-
-                    &::before {
-                        opacity: 1;
-                        transform:translateY(20px) rotateZ(20deg) ;
-                    }
                     .dropDownContent {
-                        transition: all 0.25s;
+                        top: 65px;
+                        transition: all 0.3s;
                         opacity: 1;
                         pointer-events: all;
                     }
@@ -139,17 +129,17 @@
     .dropDownMenu {
         position: absolute;
         top: calc(100% + 1em);
-        right:0;
-        padding:10px;
+        right: 0;
+        padding: 10px;
         border-radius: 5px;
-        display:none;
+        display: none;
         background-color: white;
-        min-width:200px;
+        min-width: 200px;
         &[data-show="true"] {
-            display:block;
+            display: block;
         }
-        
-        .dropDownItem  {
+
+        .dropDownItem {
             display: block;
             padding: 10px;
             cursor: pointer;

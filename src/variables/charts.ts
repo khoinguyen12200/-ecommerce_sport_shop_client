@@ -138,7 +138,7 @@ var fonts = {
 };
 
 // Colors
-var colors = {
+export var colors = {
   gray: {
     100: "#f6f9fc",
     200: "#e9ecef",

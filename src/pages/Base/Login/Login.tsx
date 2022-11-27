@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { updateToken } from '../../../redux/authSlice';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import {
     Button,
     Card,
@@ -28,6 +28,7 @@ type Props = {}
 
 
 function Login() {
+    const navigate = useNavigate();
 
     const account = useAppSelector(state => state.account);
 
@@ -48,6 +49,18 @@ function Login() {
             }))
         }
     }, [loading, res])
+
+    useEffect(() => {
+        if(account.role == 'ROLE_ADMIN') {
+            navigate('/admin')
+        }
+
+        if(account.role == 'ROLE_USER') {
+            navigate('/user')
+        }
+
+
+    },[account])
 
     async function submit() {
         toast.promise(

@@ -12,7 +12,7 @@ function FreeShip({ }: Props) {
                 <div className="txt2">
                     với các đơn hàng trị giá từ
                     <span className="txt3 ms-2">
-                        100.000 ĐỒNG
+                        1.000.000 ĐỒNG
                     </span>
                 </div>
             </div>

@@ -1,8 +1,10 @@
 .orderBreadcrumb {
+    background: black;
+    color:white;
     border-bottom: 1px solid grey;
 
     .link {
-        color: black;
+        color: lightgrey;
         padding: 1em;
         text-decoration: none;
         flex: 1;
@@ -14,10 +16,10 @@
         justify-content: center;
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
-        border-right: 2px solid grey;
+        border-right: 2px solid white;
         &.active {
-            border-right: 2px solid royalblue;
-            color: royalblue;
+            border-right: 4px solid white;
+            color: white;
             font-weight: bold;
         }
     }

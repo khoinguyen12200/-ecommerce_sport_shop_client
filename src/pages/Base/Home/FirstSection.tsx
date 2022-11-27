@@ -15,7 +15,7 @@ function FirstSection({}: Props) {
           <SiMega className='brandIcon' />
         </div>
         <div className="sectionContent">
-          <video autoPlay className='bg' src="https://brand.assets.adidas.com/video/upload/q_auto,vc_auto/video/upload/ad-mh-d_gdsxtu.mp4" />
+          <video autoPlay className='bg' src={require('../../../assets/videos/first_section.mp4')} />
           <div className='textContainer'>
             <div className='slogan'>
               <p>

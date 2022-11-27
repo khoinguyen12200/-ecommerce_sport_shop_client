@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // node.js library that concatenates classes (strings)
 import classnames from "classnames";
 // javascipt plugin for creating charts
@@ -39,25 +39,143 @@ import {
 import Header from "../../../Components/Headers/Header";
 import { chartExample1, chartExample2 } from "../../../variables/charts";
 import Wrapper from "../Wrapper";
+import axios from 'axios';
+import { ENDPOINT } from "../../../config/config";
+import { useMemo } from 'react';
+import { colors } from '../../../variables/charts';
 
+interface InvoiceData {
+    count: number;
+    month: string;
+}
+
+type InvoicesData = InvoiceData[];
+
+interface ProductData {
+    count: number;
+    month: string;
+}
+
+type ProductsData = ProductData[];
+
+interface DashboardData {
+    users: number;
+    admins: number;
+    products: ProductsData;
+    invoices: InvoicesData;
+}
 
 const Index = (props: any) => {
     const [activeNav, setActiveNav] = useState(1);
     const [chartExample1Data, setChartExample1Data] = useState("data1");
 
-    // if (window.Chart as any) {
-    //     parseOptions(Chart, chartOptions());
-    // }
+    const [data, setData] = useState<DashboardData | null>(null);
+
+    async function fetchDashboard() {
+        const res = await axios.get(ENDPOINT + '/admin');
+        setData(res.data.data);
+    }
+
+    useEffect(() => {
+        fetchDashboard();
+    }, []);
+
+    const countInvoices = useMemo(() => {
+        if (data) {
+            const invoices = data.invoices[data.invoices.length - 1];
+            return invoices.count;
+        }
+
+        return 0;
+    }, [data])
+
+    const countProducts = useMemo(() => {
+        if (data) {
+            const products = data.products[data.products.length - 1];
+            return products.count;
+        }
+
+        return 0;
+    }, [data])
+
+    const users = data?.users || 0;
+    const admins = data?.admins || 0;
+
 
     const toggleNavs = (e: any, index: any) => {
         e.preventDefault();
         setActiveNav(index);
         setChartExample1Data("data" + index);
     };
+
+    const invoicesDataChart = useMemo(() => {
+        if (data && data.invoices) {
+            const labels = data.invoices.map((item) => item.month);
+            const dataForLabels = data.invoices.map((item) => item.count);
+            return {
+                labels,
+                datasets: [
+                    {
+                        label: "Hoá đơn",
+                        data: dataForLabels,
+                        fill: false,
+                        borderColor: colors.theme["primary"],
+
+                    }
+                ]
+            }
+        }
+
+        return {
+            labels: [],
+            datasets: [
+                {
+                    label: "Hoá đơn",
+                    data: []
+                }
+            ]
+        }
+    }, [data])
+
+    const productsDataChart = useMemo(() => {
+        if (data && data.products) {
+            const labels = data.products.map((item) => item.month);
+            const dataForLabels = data.products.map((item) => item.count);
+            return {
+                labels,
+                datasets: [
+                    {
+                        label: "Sản phẩm",
+                        data: dataForLabels,
+                        fill: false,
+                        borderColor: colors.theme["primary"],
+                        backgroundColor: colors.theme["success"],
+                    }
+                ]
+            }
+        }
+
+        return {
+            labels: [],
+            datasets: [
+                {
+                    label: "Sản phẩm",
+                    data: [],
+                    borderColor: colors.theme["primary"],
+                    backgroundColor: colors.theme["success"],
+                }
+            ]
+        }
+    }, [data])
+
     return (
         <Wrapper
             header={
-                <Header/>
+                <Header
+                    users={users}
+                    admins={admins}
+                    countProducts={countProducts}
+                    countInvoices={countInvoices} />
             }
         >
 
@@ -70,9 +188,11 @@ const Index = (props: any) => {
                                 <Row className="align-items-center">
                                     <div className="col">
                                         <h6 className="text-uppercase text-light ls-1 mb-1">
-                                            Overview
+                                            Tổng quan
                                         </h6>
-                                        <h2 className="text-white mb-0">Sales value</h2>
+                                        <h2 className="text-white mb-0">
+                                            Đơn hàng
+                                        </h2>
                                     </div>
                                     <div className="col">
                                         <Nav className="justify-content-end" pills>
@@ -84,7 +204,7 @@ const Index = (props: any) => {
                                                     href="#pablo"
                                                     onClick={(e) => toggleNavs(e, 1)}
                                                 >
-                                                    <span className="d-none d-md-block">Month</span>
+                                                    <span className="d-none d-md-block">Tháng</span>
                                                     <span className="d-md-none">M</span>
                                                 </NavLink>
                                             </NavItem>
@@ -97,7 +217,7 @@ const Index = (props: any) => {
                                                     href="#pablo"
                                                     onClick={(e) => toggleNavs(e, 2)}
                                                 >
-                                                    <span className="d-none d-md-block">Week</span>
+                                                    <span className="d-none d-md-block">Tuần</span>
                                                     <span className="d-md-none">W</span>
                                                 </NavLink>
                                             </NavItem>
@@ -109,7 +229,7 @@ const Index = (props: any) => {
                                 {/* Chart */}
                                 <div className="chart">
                                     <Line
-                                        data={chartExample1[chartExample1Data]}
+                                        data={invoicesDataChart}
                                         options={chartExample1.options as any}
                                         getDatasetAtEvent={(e: any) => console.log(e) as any}
                                     />
@@ -123,9 +243,11 @@ const Index = (props: any) => {
                                 <Row className="align-items-center">
                                     <div className="col">
                                         <h6 className="text-uppercase text-muted ls-1 mb-1">
-                                            Performance
+                                            theo tháng
                                         </h6>
-                                        <h2 className="mb-0">Total orders</h2>
+                                        <h2 className="mb-0">
+                                            Sản phẩm mới
+                                        </h2>
                                     </div>
                                 </Row>
                             </CardHeader>
@@ -133,7 +255,9 @@ const Index = (props: any) => {
                                 {/* Chart */}
                                 <div className="chart">
                                     <Bar
-                                        data={chartExample2.data}
+                                        //height 100%
+                                        height={300}
+                                        data={productsDataChart}
                                         options={chartExample2.options as any}
                                     />
                                 </div>
@@ -141,195 +265,202 @@ const Index = (props: any) => {
                         </Card>
                     </Col>
                 </Row>
-                <Row className="mt-5">
-                    <Col className="mb-5 mb-xl-0" xl="8">
-                        <Card className="shadow">
-                            <CardHeader className="border-0">
-                                <Row className="align-items-center">
-                                    <div className="col">
-                                        <h3 className="mb-0">Page visits</h3>
-                                    </div>
-                                    <div className="col text-right">
-                                        <Button
-                                            color="primary"
-                                            href="#pablo"
-                                            onClick={(e) => e.preventDefault()}
-                                            size="sm"
-                                        >
-                                            See all
-                                        </Button>
-                                    </div>
-                                </Row>
-                            </CardHeader>
-                            <Table className="align-items-center table-flush" responsive>
-                                <thead className="thead-light">
-                                    <tr>
-                                        <th scope="col">Page name</th>
-                                        <th scope="col">Visitors</th>
-                                        <th scope="col">Unique users</th>
-                                        <th scope="col">Bounce rate</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">/argon/</th>
-                                        <td>4,569</td>
-                                        <td>340</td>
-                                        <td>
-                                            <i className="fas fa-arrow-up text-success mr-3" /> 46,53%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">/argon/index.html</th>
-                                        <td>3,985</td>
-                                        <td>319</td>
-                                        <td>
-                                            <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                                            46,53%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">/argon/charts.html</th>
-                                        <td>3,513</td>
-                                        <td>294</td>
-                                        <td>
-                                            <i className="fas fa-arrow-down text-warning mr-3" />{" "}
-                                            36,49%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">/argon/tables.html</th>
-                                        <td>2,050</td>
-                                        <td>147</td>
-                                        <td>
-                                            <i className="fas fa-arrow-up text-success mr-3" /> 50,87%
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">/argon/profile.html</th>
-                                        <td>1,795</td>
-                                        <td>190</td>
-                                        <td>
-                                            <i className="fas fa-arrow-down text-danger mr-3" />{" "}
-                                            46,53%
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Card>
-                    </Col>
-                    <Col xl="4">
-                        <Card className="shadow">
-                            <CardHeader className="border-0">
-                                <Row className="align-items-center">
-                                    <div className="col">
-                                        <h3 className="mb-0">Social traffic</h3>
-                                    </div>
-                                    <div className="col text-right">
-                                        <Button
-                                            color="primary"
-                                            href="#pablo"
-                                            onClick={(e) => e.preventDefault()}
-                                            size="sm"
-                                        >
-                                            See all
-                                        </Button>
-                                    </div>
-                                </Row>
-                            </CardHeader>
-                            <Table className="align-items-center table-flush" responsive>
-                                <thead className="thead-light">
-                                    <tr>
-                                        <th scope="col">Referral</th>
-                                        <th scope="col">Visitors</th>
-                                        <th scope="col" />
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Facebook</th>
-                                        <td>1,480</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <span className="mr-2">60%</span>
-                                                <div>
-                                                    <Progress
-                                                        max="100"
-                                                        value="60"
-                                                        barClassName="bg-gradient-danger"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Facebook</th>
-                                        <td>5,480</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <span className="mr-2">70%</span>
-                                                <div>
-                                                    <Progress
-                                                        max="100"
-                                                        value="70"
-                                                        barClassName="bg-gradient-success"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Google</th>
-                                        <td>4,807</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <span className="mr-2">80%</span>
-                                                <div>
-                                                    <Progress max="100" value="80" />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Instagram</th>
-                                        <td>3,678</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <span className="mr-2">75%</span>
-                                                <div>
-                                                    <Progress
-                                                        max="100"
-                                                        value="75"
-                                                        barClassName="bg-gradient-info"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">twitter</th>
-                                        <td>2,645</td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <span className="mr-2">30%</span>
-                                                <div>
-                                                    <Progress
-                                                        max="100"
-                                                        value="30"
-                                                        barClassName="bg-gradient-warning"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Card>
-                    </Col>
-                </Row>
+
+
             </Container>
         </Wrapper>
     );
 };
+
+function Others() {
+    return (
+        <Row className="mt-5">
+            <Col className="mb-5 mb-xl-0" xl="8">
+                <Card className="shadow">
+                    <CardHeader className="border-0">
+                        <Row className="align-items-center">
+                            <div className="col">
+                                <h3 className="mb-0">Page visits</h3>
+                            </div>
+                            <div className="col text-right">
+                                <Button
+                                    color="primary"
+                                    href="#pablo"
+                                    onClick={(e) => e.preventDefault()}
+                                    size="sm"
+                                >
+                                    See all
+                                </Button>
+                            </div>
+                        </Row>
+                    </CardHeader>
+                    <Table className="align-items-center table-flush" responsive>
+                        <thead className="thead-light">
+                            <tr>
+                                <th scope="col">Page name</th>
+                                <th scope="col">Visitors</th>
+                                <th scope="col">Unique users</th>
+                                <th scope="col">Bounce rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">/argon/</th>
+                                <td>4,569</td>
+                                <td>340</td>
+                                <td>
+                                    <i className="fas fa-arrow-up text-success mr-3" /> 46,53%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">/argon/index.html</th>
+                                <td>3,985</td>
+                                <td>319</td>
+                                <td>
+                                    <i className="fas fa-arrow-down text-warning mr-3" />{" "}
+                                    46,53%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">/argon/charts.html</th>
+                                <td>3,513</td>
+                                <td>294</td>
+                                <td>
+                                    <i className="fas fa-arrow-down text-warning mr-3" />{" "}
+                                    36,49%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">/argon/tables.html</th>
+                                <td>2,050</td>
+                                <td>147</td>
+                                <td>
+                                    <i className="fas fa-arrow-up text-success mr-3" /> 50,87%
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">/argon/profile.html</th>
+                                <td>1,795</td>
+                                <td>190</td>
+                                <td>
+                                    <i className="fas fa-arrow-down text-danger mr-3" />{" "}
+                                    46,53%
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Card>
+            </Col>
+            <Col xl="4">
+                <Card className="shadow">
+                    <CardHeader className="border-0">
+                        <Row className="align-items-center">
+                            <div className="col">
+                                <h3 className="mb-0">Social traffic</h3>
+                            </div>
+                            <div className="col text-right">
+                                <Button
+                                    color="primary"
+                                    href="#pablo"
+                                    onClick={(e) => e.preventDefault()}
+                                    size="sm"
+                                >
+                                    See all
+                                </Button>
+                            </div>
+                        </Row>
+                    </CardHeader>
+                    <Table className="align-items-center table-flush" responsive>
+                        <thead className="thead-light">
+                            <tr>
+                                <th scope="col">Referral</th>
+                                <th scope="col">Visitors</th>
+                                <th scope="col" />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Facebook</th>
+                                <td>1,480</td>
+                                <td>
+                                    <div className="d-flex align-items-center">
+                                        <span className="mr-2">60%</span>
+                                        <div>
+                                            <Progress
+                                                max="100"
+                                                value="60"
+                                                barClassName="bg-gradient-danger"
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Facebook</th>
+                                <td>5,480</td>
+                                <td>
+                                    <div className="d-flex align-items-center">
+                                        <span className="mr-2">70%</span>
+                                        <div>
+                                            <Progress
+                                                max="100"
+                                                value="70"
+                                                barClassName="bg-gradient-success"
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Google</th>
+                                <td>4,807</td>
+                                <td>
+                                    <div className="d-flex align-items-center">
+                                        <span className="mr-2">80%</span>
+                                        <div>
+                                            <Progress max="100" value="80" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Instagram</th>
+                                <td>3,678</td>
+                                <td>
+                                    <div className="d-flex align-items-center">
+                                        <span className="mr-2">75%</span>
+                                        <div>
+                                            <Progress
+                                                max="100"
+                                                value="75"
+                                                barClassName="bg-gradient-info"
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">twitter</th>
+                                <td>2,645</td>
+                                <td>
+                                    <div className="d-flex align-items-center">
+                                        <span className="mr-2">30%</span>
+                                        <div>
+                                            <Progress
+                                                max="100"
+                                                value="30"
+                                                barClassName="bg-gradient-warning"
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Card>
+            </Col>
+        </Row>
+    )
+}
 
 export default Index;

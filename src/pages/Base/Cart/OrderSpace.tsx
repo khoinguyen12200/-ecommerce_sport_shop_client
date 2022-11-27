@@ -59,7 +59,7 @@ function OrderSpace({ }: Props) {
                     </div>
 
                 </div>
-                <Link to='/make_order' className="btn btn-dark rounded-0 submitBtn">Đặt hàng</Link>
+                <Link to='/make_order' className="btn btn-primary rounded-0 submitBtn">Đặt hàng</Link>
             </div>
         </div>
     )

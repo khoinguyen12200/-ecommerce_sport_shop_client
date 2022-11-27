@@ -135,7 +135,7 @@ function ProductShow({ }: Props) {
                             </div>
                             <div className='text'>
                                 <div className='title'>Giao hàng miễn phí</div>
-                                <div className='desc'>Cho đơn hàng trên 100.000đ</div>
+                                <div className='desc'>Cho đơn hàng trên 1.000.000đ</div>
                             </div>
                         </div>
                         <div className='slogan'>

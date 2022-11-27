@@ -99,7 +99,7 @@ function MakeOrder({ }: Props) {
                     <label htmlFor="note">Ghi chú</label>
                 </div>
                 <div className="d-flex justify-content-end">
-                    <button className='submitBtn align-self-end btn btn-dark btn-lg rounded'>
+                    <button className='submitBtn align-self-end btn btn-primary btn-lg rounded'>
                         Xác nhận thông tin
                     </button>
                 </div>

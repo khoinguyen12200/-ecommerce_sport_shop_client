@@ -6,7 +6,7 @@ import axios from 'axios';
 import { ENDPOINT } from '../../../config/config';
 import { deleteCart,  toggleCheckedCart,  addCartProduct } from '../../../redux/cartSlice';
 import { getProductImagePath } from '../../../helper/PathHelper';
-import { BsArrowRightCircle, BsArrowRightCircleFill, BsCartDash, BsCheckCircle, BsCircle, BsFillCartPlusFill } from 'react-icons/bs';
+import { BsArrowRightCircle, BsArrowRightCircleFill, BsCartDash, BsCheckCircle, BsCheckSquare, BsCircle, BsFillCartPlusFill, BsSquare } from 'react-icons/bs';
 
 
 
@@ -108,9 +108,9 @@ function ProductItem({ product }: { product: ProductCartInterface }) {
             <div className='checkedSpace fs-2 ms-4' onClick={toggleChecked}>
                 {
                     product.checked ? (
-                        <BsCheckCircle className='checked text-success' />
+                        <BsCheckSquare className='checked text-success' />
                     ) : (
-                        <BsArrowRightCircle className='unchecked text-success' />
+                        <BsSquare className='unchecked text-light' />
                     )
                 }
             </div>

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { ENDPOINT } from '../../../config/config';
 import { DEFAULT_COUPONS } from '../../../config/constant';
 import { deleteCart, setCartCouponCode } from '../../../redux/cartSlice';
+import { setLoading } from '../../../redux/loadingSlice';
 import { useAppDispatch, useAppSelector } from '../../../redux/store'
 import { InvoiceInterface, PaymentMethodInterface } from '../../../types/InvoiceInterfaces';
 import './Payment.scss'
@@ -21,8 +22,6 @@ function Payment({ }: Props) {
 
 
     const dispatch = useAppDispatch();
-
-    const [loading, setLoading] = React.useState(false);
 
     const [loaded, setLoaded] = React.useState(false);
     const navigate = useNavigate();
@@ -53,7 +52,6 @@ function Payment({ }: Props) {
     }, [checkedProducts, couponCode, paymentMethod])
 
     async function checkInvoice() {
-        setLoading(true);
         const data = {
             ...orderInformation,
             items: checkedProducts,
@@ -61,12 +59,12 @@ function Payment({ }: Props) {
             couponCode: couponCode
         }
         try {
+            dispatch(setLoading(true))
             const res = await axios.post(ENDPOINT + '/invoice_check', data);
             setInvoice(res.data.data.invoice)
         } catch (error) {
         }
-
-        setLoading(false);
+        dispatch(setLoading(false))
     }
 
     async function handleSubmit() {
@@ -99,13 +97,6 @@ function Payment({ }: Props) {
             window.location.href = invoiceLink;
         }, 3000)
     }
-
-
-    if (loading || !invoice) return <div className="contentOrderProcess PaymentPage">
-        <div className="d-flex justify-content-center align-items-center m-5 mx-auto fs-1">
-            <Spinner animation='border' variant='secondary' />
-        </div>
-    </div>;
 
     return (
         <div className='contentOrderProcess PaymentPage'>
@@ -228,7 +219,7 @@ function Payment({ }: Props) {
                     </div>
                 </div>
                 <div>
-                    <Button style={{ width: '100%' }} className='mt-3' variant='dark' onClick={handleSubmit}>Xác nhận</Button>
+                    <Button style={{ width: '100%' }} className='mt-3' variant='primary' onClick={handleSubmit}>Xác nhận</Button>
                 </div>
             </div>
         </div>

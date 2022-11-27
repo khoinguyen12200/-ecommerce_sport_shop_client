@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { getCategoriesData, setCategories } from '../redux/publicDataSlice'
 import axios from 'axios'
 import { ENDPOINT } from '../config/config'
+import CartManagement from './Base/CartManagement'
 
 type Props = {}
 
@@ -31,6 +32,7 @@ function Index({ }: Props) {
   return (
     <div className=''>
       <Loading />
+      <CartManagement/>
       <Routes>
         <Route path='/*' element={<Base />} />
         <Route path='/admin/*' element={<Admin />} />
