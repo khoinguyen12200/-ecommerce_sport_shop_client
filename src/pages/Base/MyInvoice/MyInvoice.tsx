@@ -7,11 +7,14 @@ import axios from 'axios';
 import { ENDPOINT } from '../../../config/config';
 import { Spinner, Table } from 'react-bootstrap';
 import { mapInvoiceState, mapPaymentState } from '../../../config/constant';
+import { useAppDispatch } from '../../../redux/store';
+import { setLoading } from '../../../redux/loadingSlice';
 
 
 type Props = {}
 
 function MyInvoice({ }: Props) {
+    const dispatch = useAppDispatch();
     const [params] = useSearchParams();
     const [id, hash] = useMemo(() => {
         return [params.get('id'), params.get('hash')]
@@ -26,7 +29,11 @@ function MyInvoice({ }: Props) {
     }, [id, hash])
 
     async function fetchInvoice(id: string, hash: string) {
-        const res = await axios.get(ENDPOINT + `/invoice/${id}/${hash}`);
+        dispatch(setLoading(true))
+        const res = await axios.get(ENDPOINT + `/invoice/${id}/${hash}`)
+         .finally(() => {
+            dispatch(setLoading(false))
+        })
         const { invoice, paymentLink } = res.data.data;
         setInvoice(invoice)
         setPaymentLink(paymentLink)

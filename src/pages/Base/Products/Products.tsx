@@ -111,6 +111,7 @@ function Product({}: Props) {
 
     function applySearchText() {
         setOneParamOfSearchParams("name", searchText);
+        setOneParamOfSearchParams("page", '1');
         SpeechRecognition.stopListening();
     }
 
@@ -138,7 +139,7 @@ function Product({}: Props) {
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
                         />
-                        <span className="btn-light btn" onClick={applySearchText}>
+                        <span className="btn-primary btn" onClick={applySearchText}>
                             <i
                                 className="fas fa-search"
                                 style={{ cursor: "pointer" }}

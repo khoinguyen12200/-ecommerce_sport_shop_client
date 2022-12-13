@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useRef } from 'react'
 import { useParams } from 'react-router-dom';
 import { ENDPOINT } from '../../../config/config';
-import { InvoiceState, mapInvoiceState, PaymentState, mapPaymentState, formatVND } from '../../../config/constant';
+import { InvoiceState, mapInvoiceState, mapPaymentState, formatVND } from '../../../config/constant';
 import { setLoading } from '../../../redux/loadingSlice';
 import { useAppDispatch } from '../../../redux/store';
-import { CouponInterface, InvoiceInterface, InvoiceItemInterface, PaymentMethodInterface } from '../../../types/InvoiceInterfaces';
+import { CouponInterface, InvoiceInterface, InvoiceItemInterface, PaymentMethodInterface, InvoicePaymentStatusInterface, InvoiceStateInterface } from '../../../types/InvoiceInterfaces';
 import BaseContent from '../BaseContent'
 import { useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
@@ -38,6 +38,7 @@ function UpdateInvoice({ }: Props) {
             dispatch(setLoading(false))
         })
         setInvoice(res.data.data);
+        console.log(res.data.data)
     }
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -94,58 +95,73 @@ function UpdateInvoice({ }: Props) {
                     </div>
                     <div className="col-6">
                         <h5>Thông tin đơn hàng</h5>
-                        <div className="form-floating mb-3">
-                            <select className="form-select" id="state" name="state" defaultValue={invoice?.state}>
-                                {
-                                    //map invoice state
-                                    Object.keys(InvoiceState).map((key, index) => {
-                                        const value = InvoiceState[key as keyof typeof InvoiceState];
+                        {
+                            invoice?.state && (
+                                <div className="form-floating mb-3">
+                                    <select className="form-select" id="state" name="state" defaultValue={invoice.state}>
+                                        {
+                                            //map invoice state
+                                            Object.keys(InvoiceStateInterface).map((key, index) => {
+                                                const value = InvoiceStateInterface[key as keyof typeof InvoiceStateInterface];
 
-                                        return <option value={value}>
-                                            {
-                                                mapInvoiceState(value)
-                                            }
-                                        </option>
-                                    })
-                                }
-                            </select>
-                            <label htmlFor="state">Trạng thái</label>
-                        </div>
-                        <div className="form-floating mb-3">
-                            <select className="form-select" id="paymentMethod" name="paymentMethod" value={invoice?.paymentMethod}>
-                                {
-                                    //map invoice state
-                                    Object.keys(PaymentMethodInterface).map((key, index) => {
-                                        const value = PaymentMethodInterface[key as keyof typeof PaymentMethodInterface] as PaymentMethodInterface;
+                                                return <option value={value} defaultChecked={invoice.state == value}>
+                                                    {
+                                                        mapInvoiceState(value)
+                                                    }
+                                                </option>
+                                            })
+                                        }
+                                    </select>
+                                    <label htmlFor="state">Trạng thái</label>
+                                </div>
+                            )
+                        }
 
-                                        return <option value={value}>
-                                            {
-                                                getPaymentMethod(value)
-                                            }
-                                        </option>
-                                    })
-                                }
-                            </select>
-                            <label htmlFor="state">Hình thức thanh toán</label>
-                        </div>
+                        {
+                            invoice && (
+                                <div className="form-floating mb-3">
+                                    <select className="form-select" id="paymentMethod" name="paymentMethod" defaultValue={invoice.paymentMethod}>
+                                        {
+                                            //map invoice state
+                                            Object.keys(PaymentMethodInterface).map((key, index) => {
+                                                const value = PaymentMethodInterface[key as keyof typeof PaymentMethodInterface] as PaymentMethodInterface;
 
-                        <div className="form-floating mb-3">
-                            <select className="form-select" id="paymentState" name='paymentState' value={invoice?.paymentState}>
-                                {
-                                    //map invoice state
-                                    Object.keys(PaymentState).map((key, index) => {
-                                        const value = PaymentState[key as keyof typeof PaymentState];
+                                                return <option value={value} defaultChecked={invoice.paymentMethod == value}>
+                                                    {
+                                                        getPaymentMethod(value)
+                                                    }
+                                                </option>
+                                            })
+                                        }
+                                    </select>
+                                    <label htmlFor="state">Hình thức thanh toán</label>
+                                </div>
 
-                                        return <option value={value}>
-                                            {
-                                                mapPaymentState(value)
-                                            }
-                                        </option>
-                                    })
-                                }
-                            </select>
-                            <label htmlFor="state">Trạng thái thanh toán</label>
-                        </div>
+                            )
+                        }
+
+
+                        {
+                            invoice && (
+                                <div className="form-floating mb-3">
+                                    <select className="form-select" id="paymentState" name='paymentState' defaultValue={invoice?.paymentState}>
+                                        {
+                                            //map invoice state
+                                            Object.keys(InvoicePaymentStatusInterface).map((key, index) => {
+                                                const value = InvoicePaymentStatusInterface[key as keyof typeof InvoicePaymentStatusInterface];
+
+                                                return <option value={value} defaultChecked={invoice?.paymentState == value}>
+                                                    {
+                                                        mapPaymentState(value)
+                                                    }
+                                                </option>
+                                            })
+                                        }
+                                    </select>
+                                    <label htmlFor="state">Trạng thái thanh toán</label>
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
 

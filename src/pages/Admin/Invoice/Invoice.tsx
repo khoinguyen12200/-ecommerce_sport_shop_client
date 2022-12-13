@@ -49,8 +49,8 @@ function Invoice({ }: Props) {
                 </thead>
                 <tbody>
                     {invoices.map((invoice, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
+                        <tr key={invoice.id}>
+                            <td>{invoice.id}</td>
                             <td>{invoice.name}</td>
                             <td>{invoice.address}</td>
                             <td>{invoice.phone}</td>

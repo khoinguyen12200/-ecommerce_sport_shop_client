@@ -62,7 +62,8 @@ function Payment({ }: Props) {
             dispatch(setLoading(true))
             const res = await axios.post(ENDPOINT + '/invoice_check', data);
             setInvoice(res.data.data.invoice)
-        } catch (error) {
+        } catch (error : any) {
+            toast.error('Sản phẩm đã hết hạn hoặc không còn đủ số lượng');
         }
         dispatch(setLoading(false))
     }

@@ -31,37 +31,43 @@
             text-decoration: none;
             color:black;
             border-radius: 5px;
-            overflow: hidden;
+            transition: all 0.5s;
+            background-color: white;
+            box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.0);
             &:hover {
+                transition: all 0.5s;
+                transform: scale(1.05);
+                box-shadow: -10px 5px 30px 1px rgba(0,0,0,0.2);
+                z-index: 10;
+                transition-delay: 1s;
+                .img {
+                    outline: 3px solid white;
+                    transform: scale(1.1);
+                    transition: all 0.5s;
+                    transition-delay: 1s;
+                }
                 .info {
-                    transition: all 0.5s ease-out;
-                    transform: translateY(calc(-100% - 25px)) scale(0.9);
-                    outline: 18px solid rgba(0, 0, 0, 0.806);
-                    background-color: rgba(0, 0, 0, 0.8);
-                    color:white;
+                    transition-delay: 1s;
+                    transform: scale(0.8);
                 }
                 .galleries {
                     opacity: 1;
                     visibility: visible;
                     transition: all 0.3s ease;
-                    transform: translateY(0);
                     pointer-events: all;
-                    transition-delay: 0.5s;
                 }
             }
             .galleries {
                 opacity: 0;
                 visibility: hidden;
-                transform: translateY(100px);
                 pointer-events: none;
                 transition: all 0.3s ease;
                 position:absolute;
                 left: 0;
-                top: 300px;
+                top: 100%;
                 width: 300px;
                 height: 120px;
                 z-index: 500;
-                background: white;
                 padding-top: 10px;
                 padding-bottom: 10px;
                 display: flex;
@@ -71,7 +77,10 @@
                 .smallimg {
                     width: 100px;
                     height: 100px;
+                    border-radius: 5px;
                     object-fit: cover;
+                    border: 3px solid white;
+                    box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.2);
                 }
             }
             .img {
@@ -79,6 +88,7 @@
                 height: 300px;
                 object-fit: cover;
                 margin-bottom: 1em;
+                border-radius: 5px;
             }
             .info {
                 outline: 18px solid rgba(0, 0, 0, 0);
@@ -86,7 +96,6 @@
                 .name {
                     text-transform: uppercase;
                     margin-bottom: 0.25em;
-                    //max rows 2
                     overflow: hidden;
                     display: -webkit-box;
                     -webkit-line-clamp: 2;

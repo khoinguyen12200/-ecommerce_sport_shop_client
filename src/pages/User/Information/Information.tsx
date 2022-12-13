@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/store'
 import './Information.scss';
 import { useEffect } from 'react';
 import BaseContent from '../BaseContent';
+import { validatePhone } from '../../../helper/Validattor';
 
 type Props = {}
 
@@ -20,6 +21,12 @@ function Information({ }: Props) {
         //get all data from form to json
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
+        const phone = data.phone as any;
+        //validate phone
+        if(validatePhone(phone) === false) {
+            toast.error('Số điện thoại không hợp lệ')
+            return;
+        }
         //send data to server
         await toast.promise(
             updateUser(data),

@@ -89,9 +89,7 @@ export const addCartProduct = createAsyncThunk(
 
         if(payload.quantity > 0) {
             toast.success('Thêm vào giỏ hàng thành công');
-        }
-
-        
+        }        
 
         return newArr;
     }

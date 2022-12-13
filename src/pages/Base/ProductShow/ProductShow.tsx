@@ -52,7 +52,7 @@ function ProductShow({ }: Props) {
         setProduct(res.data.data);
     }
 
-    function addToCart() {
+    async function addToCart() {
         const variants = document.querySelector('input[name="variant"]');
         const variantEl = document.querySelector('input[name="variant"]:checked') as HTMLInputElement;
         if (variants) {
@@ -61,10 +61,13 @@ function ProductShow({ }: Props) {
                 return;
             }
         }
-        dispatch(addCartProduct({
+        dispatch(setLoading(true))
+        await dispatch(addCartProduct({
             productId: variantEl?.value || product?.id,
             quantity
-        }))
+        })).finally(() => {
+            dispatch(setLoading(false))
+        })
     }
 
     const [loadOrder, setLoadOrder] = React.useState(false);
